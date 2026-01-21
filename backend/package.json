@@ -7,10 +7,12 @@
     "dev": "bun run --watch src/server.ts",
     "build": "bun build src/server.ts --outdir dist --target node",
     "start": "bun run dist/server.js",
-    "prisma:generate": "bun prisma generate",
-  "prisma:migrate": "bun prisma migrate deploy", 
+    "prisma:generate": "bunx prisma generate",
+    "prisma:migrate": "bunx prisma migrate dev",
+    "prisma:migrate:prod": "bunx prisma migrate deploy",
     "prisma:studio": "bunx prisma studio",
-    "import:ipl": "bun run scripts/importIplData.ts"
+    "import:ipl": "bun run scripts/importIplData.ts",
+    "check:tables": "bun run scripts/checkTables.ts"
   },
   "keywords": [
     "ipl",
