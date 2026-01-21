@@ -34,14 +34,27 @@ const paginationSchema = z.object({
  *         description: List of top batsmen
  */
 export const getTopBatsmenHandler = async (req: Request, res: Response) => {
-  const parseResult = paginationSchema.safeParse(req.query);
-  if (!parseResult.success) {
-    return res.status(400).json({ error: "Invalid query params", details: parseResult.error });
-  }
+  try {
+    const parseResult = paginationSchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return res.status(400).json({ error: "Invalid query params", details: parseResult.error });
+    }
 
-  const { limit } = parseResult.data;
-  const data = await getTopBatsmen(limit);
-  res.json(data);
+    const { limit } = parseResult.data;
+    console.log(`[Analytics] Fetching top ${limit} batsmen...`);
+    const data = await getTopBatsmen(limit);
+    console.log(`[Analytics] Successfully fetched ${data.length} batsmen`);
+    res.json(data);
+  } catch (error: any) {
+    console.error("[Analytics] Error in getTopBatsmenHandler:", error);
+    console.error("[Analytics] Error stack:", error.stack);
+    console.error("[Analytics] Error details:", JSON.stringify(error, null, 2));
+    res.status(500).json({ 
+      error: "Failed to fetch top batsmen", 
+      message: error.message,
+      ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
+    });
+  }
 };
 
 /**
@@ -64,14 +77,27 @@ export const getTopBatsmenHandler = async (req: Request, res: Response) => {
  *         description: List of top bowlers
  */
 export const getTopBowlersHandler = async (req: Request, res: Response) => {
-  const parseResult = paginationSchema.safeParse(req.query);
-  if (!parseResult.success) {
-    return res.status(400).json({ error: "Invalid query params", details: parseResult.error });
-  }
+  try {
+    const parseResult = paginationSchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return res.status(400).json({ error: "Invalid query params", details: parseResult.error });
+    }
 
-  const { limit } = parseResult.data;
-  const data = await getTopBowlers(limit);
-  res.json(data);
+    const { limit } = parseResult.data;
+    console.log(`[Analytics] Fetching top ${limit} bowlers...`);
+    const data = await getTopBowlers(limit);
+    console.log(`[Analytics] Successfully fetched ${data.length} bowlers`);
+    res.json(data);
+  } catch (error: any) {
+    console.error("[Analytics] Error in getTopBowlersHandler:", error);
+    console.error("[Analytics] Error stack:", error.stack);
+    console.error("[Analytics] Error details:", JSON.stringify(error, null, 2));
+    res.status(500).json({ 
+      error: "Failed to fetch top bowlers", 
+      message: error.message,
+      ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
+    });
+  }
 };
 
 /**
@@ -86,7 +112,20 @@ export const getTopBowlersHandler = async (req: Request, res: Response) => {
  *         description: Performance summary per team
  */
 export const getTeamPerformance = async (_req: Request, res: Response) => {
-  const data = await getTeamPerformanceSummary();
-  res.json(data);
+  try {
+    console.log("[Analytics] Fetching team performance summary...");
+    const data = await getTeamPerformanceSummary();
+    console.log(`[Analytics] Successfully fetched ${data.length} teams`);
+    res.json(data);
+  } catch (error: any) {
+    console.error("[Analytics] Error in getTeamPerformance:", error);
+    console.error("[Analytics] Error stack:", error.stack);
+    console.error("[Analytics] Error details:", JSON.stringify(error, null, 2));
+    res.status(500).json({ 
+      error: "Failed to fetch team performance", 
+      message: error.message,
+      ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
+    });
+  }
 };
 

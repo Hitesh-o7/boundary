@@ -61,13 +61,25 @@ const matchListQuerySchema = z.object({
  *         description: Paginated list of matches
  */
 export const listMatchesHandler = async (req: Request, res: Response) => {
-  const parseResult = matchListQuerySchema.safeParse(req.query);
-  if (!parseResult.success) {
-    return res.status(400).json({ error: "Invalid query params", details: parseResult.error });
-  }
+  try {
+    const parseResult = matchListQuerySchema.safeParse(req.query);
+    if (!parseResult.success) {
+      return res.status(400).json({ error: "Invalid query params", details: parseResult.error });
+    }
 
-  const { page, pageSize, seasonId, teamId } = parseResult.data;
-  const result = await listMatches(page, pageSize, { seasonId, teamId });
-  res.json(result);
+    const { page, pageSize, seasonId, teamId } = parseResult.data;
+    console.log(`[Matches] Fetching page ${page}, size ${pageSize}, season ${seasonId}, team ${teamId}`);
+    const result = await listMatches(page, pageSize, { seasonId, teamId });
+    console.log(`[Matches] Successfully fetched ${result.items.length} matches`);
+    res.json(result);
+  } catch (error: any) {
+    console.error("[Matches] Error in listMatchesHandler:", error);
+    console.error("[Matches] Error stack:", error.stack);
+    res.status(500).json({ 
+      error: "Failed to fetch matches", 
+      message: error.message,
+      ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
+    });
+  }
 };
 
