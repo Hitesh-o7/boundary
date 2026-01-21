@@ -80,9 +80,9 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#F7F9F8]">
+    <div className="flex h-screen bg-[#ff0000] p-2 gap-2">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+      <aside className="w-64 bg-[#f7f7f7] border-r border-gray-200 rounded-[15px] flex flex-col">
         {/* Logo */}
         <div className="p-6">
           <div className="flex items-center gap-2">
@@ -168,9 +168,9 @@ const DashboardPage = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+        <header className="bg-[#f7f7f7] rounded-[15px] px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex-1 max-w-xl">
               <div className="relative">
@@ -206,7 +206,8 @@ const DashboardPage = () => {
         </header>
 
         {/* Dashboard Content */}
-        <div className="p-8">
+        <div className="flex-1 overflow-y-auto mt-2">
+          <div className="p-8 bg-[#f7f7f7] rounded-[15px] min-h-full">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">IPL Dashboard</h1>
             <p className="text-gray-600">
@@ -393,6 +394,7 @@ const DashboardPage = () => {
               </div>
             </>
           )}
+          </div>
         </div>
       </main>
     </div>
