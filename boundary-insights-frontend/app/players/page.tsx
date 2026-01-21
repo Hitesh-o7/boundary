@@ -64,9 +64,9 @@ const PlayersPage = () => {
   }, []);
 
   return (
-    <div className="flex h-screen bg-[#F7F9F8]">
+    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+      <aside className="w-64 bg-[#f1f1f1] rounded-[15px] flex flex-col">
         {/* Logo */}
         <div className="p-6">
           <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ const PlayersPage = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-8 py-4 flex-shrink-0">
+        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex-1 max-w-xl">
               <div className="relative">
@@ -171,8 +171,8 @@ const PlayersPage = () => {
         </header>
 
         {/* Players Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-8">
+        <div className="flex-1 overflow-y-auto mt-2">
+          <div className="p-8 bg-[#f1f1f1] rounded-[15px] min-h-full">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Players Statistics</h1>
             <p className="text-gray-600">
