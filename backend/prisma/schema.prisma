@@ -21,6 +21,7 @@ model Season {
   matches   Match[]
 
   @@unique([year])
+  @@map("Season")
 }
 
 // IPL teams (franchises)
@@ -41,6 +42,7 @@ model Team {
 
   @@unique([name])
   @@index([shortName])
+  @@map("Team")
 }
 
 // Players participating in IPL
@@ -61,6 +63,7 @@ model Player {
   dismissals        Delivery[] @relation("DismissedPlayer")
 
   @@index([name])
+  @@map("Player")
 }
 
 // Match result type
@@ -125,6 +128,7 @@ model Match {
   @@index([homeTeamId])
   @@index([awayTeamId])
   @@index([winnerTeamId])
+  @@map("Match")
 }
 
 // Ball-by-ball deliveries
@@ -171,5 +175,6 @@ model Delivery {
   @@index([bowlingTeamId])
   @@index([strikerId])
   @@index([bowlerId])
+  @@map("Delivery") // Explicit table name mapping for PostgreSQL
 }
 
