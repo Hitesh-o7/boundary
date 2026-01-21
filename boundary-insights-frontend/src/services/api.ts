@@ -1,7 +1,13 @@
+// IMPORTANT: API_BASE_URL must include '/api' prefix to match backend routes
+// Backend mounts all routes at /api, so this should be: http://localhost:4000/api
+// Set in .env.local: NEXT_PUBLIC_API_BASE_URL=http://localhost:4000/api
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api";
 
+// Validate API_BASE_URL ends with /api to prevent 404 errors
+const baseUrl = API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`;
+
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${path}`, {
+  const res = await fetch(`${baseUrl}${path}`, {
     ...init,
     // Frontend never sends or receives raw JSON files; only aggregated API data.
     headers: {
