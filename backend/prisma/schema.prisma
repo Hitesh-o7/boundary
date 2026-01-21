@@ -1,0 +1,175 @@
+// Boundary Insights - IPL Data Platform
+// PostgreSQL + Prisma schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Seasons (e.g., 2008, 2009, ...)
+model Season {
+  id        Int      @id @default(autoincrement())
+  year      Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  matches   Match[]
+
+  @@unique([year])
+}
+
+// IPL teams (franchises)
+model Team {
+  id        Int      @id @default(autoincrement())
+  name      String
+  shortName String?
+  city      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  homeMatches   Match[] @relation("HomeTeam")
+  awayMatches   Match[] @relation("AwayTeam")
+  tossWins      Match[] @relation("TossWinnerTeam")
+  matchWins     Match[] @relation("WinnerTeam")
+  battingInnings Delivery[] @relation("BattingTeam")
+  bowlingInnings Delivery[] @relation("BowlingTeam")
+
+  @@unique([name])
+  @@index([shortName])
+}
+
+// Players participating in IPL
+model Player {
+  id           Int         @id @default(autoincrement())
+  name         String
+  fullName     String?
+  country      String?
+  battingStyle String?
+  bowlingStyle String?
+  role         String? // batsman, bowler, all-rounder, keeper, etc.
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  battingDeliveries Delivery[] @relation("Striker")
+  nonStrikerDeliveries Delivery[] @relation("NonStriker")
+  bowlingDeliveries Delivery[] @relation("Bowler")
+  dismissals        Delivery[] @relation("DismissedPlayer")
+
+  @@index([name])
+}
+
+// Match result type
+enum MatchResultType {
+  NORMAL
+  TIE
+  NO_RESULT
+}
+
+// Toss decision
+enum TossDecision {
+  BAT
+  BOWL
+}
+
+// Dismissal kind (simplified set)
+enum DismissalKind {
+  BOWLED
+  CAUGHT
+  LBW
+  RUN_OUT
+  STUMPED
+  HIT_WICKET
+  RETIRED_HURT
+  OBSTRUCTING_FIELD
+  HIT_BALL_TWICE
+}
+
+// Matches
+model Match {
+  id              Int              @id @default(autoincrement())
+  externalKey     String?          // Unique identifier derived from JSON to ensure idempotency
+  seasonId        Int
+  city            String?
+  venue           String?
+  matchDate       DateTime
+  matchNumber     Int?             // Number within season if available
+  homeTeamId      Int              @map("team1Id")
+  awayTeamId      Int              @map("team2Id")
+  tossWinnerTeamId Int?
+  tossDecision    TossDecision?
+  resultType      MatchResultType?
+  winnerTeamId    Int?
+  resultMargin    Int?
+  resultBy        String?          // runs, wickets
+  dlApplied       Boolean?         @default(false)
+  umpire1         String?
+  umpire2         String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  season          Season           @relation(fields: [seasonId], references: [id])
+  homeTeam        Team             @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam        Team             @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  tossWinnerTeam  Team?            @relation("TossWinnerTeam", fields: [tossWinnerTeamId], references: [id])
+  winnerTeam      Team?            @relation("WinnerTeam", fields: [winnerTeamId], references: [id])
+
+  deliveries      Delivery[]
+
+  @@unique([externalKey])
+  @@index([seasonId, matchDate])
+  @@index([homeTeamId])
+  @@index([awayTeamId])
+  @@index([winnerTeamId])
+}
+
+// Ball-by-ball deliveries
+model Delivery {
+  id              BigInt        @id @default(autoincrement())
+  matchId         Int
+  inningNumber    Int
+  overNumber      Int
+  ballInOver      Int
+  battingTeamId   Int
+  bowlingTeamId   Int
+
+  strikerId       Int
+  nonStrikerId    Int
+  bowlerId        Int
+
+  runsBatsman     Int           @default(0)
+  runsExtras      Int           @default(0)
+  runsTotal       Int           @default(0)
+
+  // Extras breakdown (optional)
+  isWide          Boolean       @default(false)
+  isNoBall        Boolean       @default(false)
+  isBye           Boolean       @default(false)
+  isLegBye        Boolean       @default(false)
+  isPenalty       Boolean       @default(false)
+
+  dismissalKind   DismissalKind?
+  dismissedPlayerId Int?
+
+  createdAt       DateTime      @default(now())
+
+  match           Match         @relation(fields: [matchId], references: [id])
+  battingTeam     Team          @relation("BattingTeam", fields: [battingTeamId], references: [id])
+  bowlingTeam     Team          @relation("BowlingTeam", fields: [bowlingTeamId], references: [id])
+  striker         Player        @relation("Striker", fields: [strikerId], references: [id])
+  nonStriker      Player        @relation("NonStriker", fields: [nonStrikerId], references: [id])
+  bowler          Player        @relation("Bowler", fields: [bowlerId], references: [id])
+  dismissedPlayer Player?       @relation("DismissedPlayer", fields: [dismissedPlayerId], references: [id])
+
+  @@unique([matchId, inningNumber, overNumber, ballInOver])
+  @@index([matchId])
+  @@index([battingTeamId])
+  @@index([bowlingTeamId])
+  @@index([strikerId])
+  @@index([bowlerId])
+}
+

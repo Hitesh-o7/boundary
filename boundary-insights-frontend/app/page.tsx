@@ -1,0 +1,402 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import {
+  LayoutDashboard,
+  CheckSquare,
+  Calendar,
+  BarChart3,
+  Users,
+  Settings,
+  HelpCircle,
+  LogOut,
+  Search,
+  Bell,
+  ArrowUpRight,
+  TrendingUp,
+  Plus,
+  Play,
+  Pause,
+  Square,
+  Download,
+  Trophy,
+  Target,
+} from 'lucide-react';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from 'recharts';
+import {
+  getTopBatsmen,
+  getTopBowlers,
+  getTeamPerformance,
+  getMatches,
+  TopBatsmanDto,
+  TopBowlerDto,
+  TeamPerformanceDto,
+  PaginatedMatchesDto
+} from '@services/api';
+
+const DashboardPage = () => {
+  const [activeMenu, setActiveMenu] = useState('Dashboard');
+  const [batsmen, setBatsmen] = useState<TopBatsmanDto[] | null>(null);
+  const [bowlers, setBowlers] = useState<TopBowlerDto[] | null>(null);
+  const [teams, setTeams] = useState<TeamPerformanceDto[] | null>(null);
+  const [matches, setMatches] = useState<PaginatedMatchesDto | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [bats, bowl, perf, matchPage] = await Promise.all([
+          getTopBatsmen(10),
+          getTopBowlers(10),
+          getTeamPerformance(),
+          getMatches(1, 10)
+        ]);
+        setBatsmen(bats);
+        setBowlers(bowl);
+        setTeams(perf);
+        setMatches(matchPage);
+      } catch (e: any) {
+        setError(e.message ?? 'Failed to load dashboard');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // Calculate KPIs from team data
+  const totalMatches = teams?.reduce((sum, t) => sum + t.matchesPlayed, 0) || 0;
+  const totalWins = teams?.reduce((sum, t) => sum + t.wins, 0) || 0;
+  const runningProjects = teams?.filter(t => t.matchesPlayed > 0).length || 0;
+  const topTeam = teams?.[0]?.teamName || 'Loading...';
+
+  return (
+    <div className="flex h-screen bg-[#F7F9F8]">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        {/* Logo */}
+        <div className="p-6">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-[#0F6D4E] rounded-xl flex items-center justify-center">
+              <Trophy className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-bold text-gray-900">Boundary</span>
+          </div>
+        </div>
+
+        {/* Menu */}
+        <nav className="flex-1 px-4">
+          <div className="mb-6">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
+              MENU
+            </p>
+            {[
+              { icon: LayoutDashboard, label: 'Dashboard', badge: null },
+              { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
+              { icon: Trophy, label: 'Players', badge: null },
+              { icon: BarChart3, label: 'Analytics', badge: null },
+              { icon: Calendar, label: 'Matches', badge: null },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.label === 'Dashboard' ? '/' : `/${item.label.toLowerCase()}`}
+                onClick={() => setActiveMenu(item.label)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
+                  activeMenu === item.label
+                    ? 'bg-[#0F6D4E] text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="flex-1 text-left font-medium">{item.label}</span>
+                {item.badge && (
+                  <span className="bg-gray-900 text-white text-xs font-bold px-2 py-0.5 rounded">
+                    {item.badge}
+                  </span>
+                )}
+              </a>
+            ))}
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
+              GENERAL
+            </p>
+            {[
+              { icon: Settings, label: 'Settings' },
+              { icon: HelpCircle, label: 'Help' },
+              { icon: LogOut, label: 'Logout' },
+            ].map((item) => (
+              <button
+                key={item.label}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 transition-all"
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="flex-1 text-left font-medium">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* API Status */}
+        <div className="p-4">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="font-bold mb-1">IPL 2022 Data</h3>
+              <p className="text-sm text-gray-300 mb-4">
+                {loading ? 'Loading...' : `${totalMatches} matches analyzed`}
+              </p>
+              <a
+                href="/docs"
+                className="w-full bg-[#0F6D4E] hover:bg-[#145C44] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                API Docs
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-auto">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 px-8 py-4 sticky top-0 z-10">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 max-w-xl">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search teams, players..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
+                />
+                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
+                  ⌘ F
+                </kbd>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 ml-8">
+              <button className="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <Bell className="w-6 h-6" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+              </button>
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                  BI
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Boundary Insights</p>
+                  <p className="text-xs text-gray-500">IPL Analytics</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Dashboard Content */}
+        <div className="p-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">IPL Dashboard</h1>
+            <p className="text-gray-600">
+              Analyze performance, track statistics, and explore match insights.
+            </p>
+          </div>
+
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              Error: {error}
+            </div>
+          )}
+
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-gray-600">Loading IPL data...</div>
+            </div>
+          ) : (
+            <>
+              {/* KPI Cards */}
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-[#0F6D4E] to-[#145C44] rounded-2xl p-6 text-white relative overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-white/80 mb-2">Total Matches</p>
+                  <h2 className="text-5xl font-bold mb-3">{totalMatches}</h2>
+                  <div className="flex items-center gap-1 text-sm">
+                    <Trophy className="w-4 h-4" />
+                    <span>IPL 2022 Season</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Total Teams</p>
+                  <h2 className="text-5xl font-bold text-gray-900 mb-3">{teams?.length || 0}</h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <Users className="w-4 h-4" />
+                    <span>Active franchises</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Top Scorer</p>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
+                    {batsmen?.[0]?.playerName || 'N/A'}
+                  </h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <TrendingUp className="w-4 h-4" />
+                    <span>{batsmen?.[0]?.totalRuns || 0} runs</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Top Bowler</p>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
+                    {bowlers?.[0]?.playerName || 'N/A'}
+                  </h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <Target className="w-4 h-4" />
+                    <span>{bowlers?.[0]?.wickets || 0} wickets</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Charts Grid */}
+              <div className="grid grid-cols-12 gap-6 mb-8">
+                {/* Top Batsmen */}
+                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-6">Top Batsmen by Runs</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={batsmen?.slice(0, 5) || []}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                      <XAxis dataKey="playerName" axisLine={false} tickLine={false} />
+                      <YAxis axisLine={false} tickLine={false} />
+                      <Tooltip />
+                      <Bar dataKey="totalRuns" fill="#0F6D4E" radius={[8, 8, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Top Bowlers */}
+                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-6">Top Bowlers by Wickets</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={bowlers?.slice(0, 5) || []}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                      <XAxis dataKey="playerName" axisLine={false} tickLine={false} />
+                      <YAxis axisLine={false} tickLine={false} />
+                      <Tooltip />
+                      <Bar dataKey="wickets" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Team Performance */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8">
+                <h3 className="text-lg font-bold text-gray-900 mb-6">Team Performance Overview</h3>
+                <ResponsiveContainer width="100%" height={350}>
+                  <BarChart data={teams || []}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="teamName" axisLine={false} tickLine={false} />
+                    <YAxis axisLine={false} tickLine={false} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="wins" stackId="a" fill="#0F6D4E" name="Wins" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="losses" stackId="a" fill="#ef4444" name="Losses" />
+                    <Bar dataKey="ties" stackId="a" fill="#f97316" name="Ties" />
+                    <Bar dataKey="noResults" stackId="a" fill="#64748b" name="No Result" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Recent Matches */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200">
+                <h3 className="text-lg font-bold text-gray-900 mb-6">Recent Matches</h3>
+                {matches && matches.items.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full">
+                      <thead className="border-b border-gray-200">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                            Date
+                          </th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                            Match
+                          </th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                            Venue
+                          </th>
+                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                            Winner
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {matches.items.map((m, idx) => (
+                          <tr key={m.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="px-4 py-3 text-sm text-gray-600">
+                              {new Date(m.matchDate).toLocaleDateString()}
+                            </td>
+                            <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                              {m.homeTeam} vs {m.awayTeam}
+                            </td>
+                            <td className="px-4 py-3 text-sm text-gray-600">
+                              {m.city ? `${m.city}, ` : ''}
+                              {m.venue}
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              {m.winnerTeam ? (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                  {m.winnerTeam}
+                                </span>
+                              ) : (
+                                <span className="text-gray-400">N/A</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-8">No matches found</p>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default DashboardPage;
