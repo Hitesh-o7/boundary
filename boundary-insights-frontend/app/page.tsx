@@ -31,6 +31,11 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
 } from 'recharts';
 import {
   getTopBatsmen,
@@ -157,7 +162,7 @@ const DashboardPage = () => {
                 <input
                   type="text"
                   placeholder="Search teams, players..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-[40px] focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
                 />
                 <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
                   ⌘ F
@@ -201,9 +206,46 @@ const DashboardPage = () => {
           )}
 
           {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-gray-600">Loading IPL data...</div>
-            </div>
+            <>
+              {/* Skeleton KPI Cards */}
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
+                    <div className="h-12 bg-gray-200 rounded w-16 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-20"></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skeleton Charts */}
+              <div className="grid grid-cols-12 gap-6 mb-8">
+                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                  <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
+                  <div className="h-64 bg-gray-100 rounded"></div>
+                </div>
+                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                  <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
+                  <div className="h-64 bg-gray-100 rounded"></div>
+                </div>
+              </div>
+
+              {/* Skeleton Team Performance */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8 animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-56 mb-6"></div>
+                <div className="h-80 bg-gray-100 rounded"></div>
+              </div>
+
+              {/* Skeleton Table */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-40 mb-6"></div>
+                <div className="space-y-3">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="h-16 bg-gray-100 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            </>
           ) : (
             <>
               {/* KPI Cards */}
@@ -271,47 +313,130 @@ const DashboardPage = () => {
 
               {/* Charts Grid */}
               <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen */}
-                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-6">Top Batsmen by Runs</h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={batsmen?.slice(0, 5) || []}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                      <XAxis dataKey="playerName" axisLine={false} tickLine={false} />
-                      <YAxis axisLine={false} tickLine={false} />
-                      <Tooltip />
-                      <Bar dataKey="totalRuns" fill="#0F6D4E" radius={[8, 8, 0, 0]} />
+                {/* Top Batsmen - Gradient Bars */}
+                <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-bold text-gray-900">Top Batsmen by Runs</h3>
+                    <span className="text-sm text-gray-500">IPL 2022</span>
+                  </div>
+                  <ResponsiveContainer width="100%" height={320}>
+                    <BarChart data={batsmen?.slice(0, 8) || []} layout="vertical">
+                      <defs>
+                        <linearGradient id="batsmenGradient" x1="0" y1="0" x2="1" y2="0">
+                          <stop offset="0%" stopColor="#0F6D4E" stopOpacity={0.8}/>
+                          <stop offset="100%" stopColor="#10b981" stopOpacity={0.9}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                      <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                      <YAxis 
+                        type="category" 
+                        dataKey="playerName" 
+                        axisLine={false} 
+                        tickLine={false}
+                        width={140}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#fff', 
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        }}
+                      />
+                      <Bar dataKey="totalRuns" fill="url(#batsmenGradient)" radius={[0, 8, 8, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
-                {/* Top Bowlers */}
-                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-6">Top Bowlers by Wickets</h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={bowlers?.slice(0, 5) || []}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                      <XAxis dataKey="playerName" axisLine={false} tickLine={false} />
-                      <YAxis axisLine={false} tickLine={false} />
-                      <Tooltip />
-                      <Bar dataKey="wickets" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
-                    </BarChart>
+                {/* Top Bowlers - Pie Chart */}
+                <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-bold text-gray-900">Top 5 Wicket Takers</h3>
+                  </div>
+                  <ResponsiveContainer width="100%" height={320}>
+                    <PieChart>
+                      <Pie
+                        data={bowlers?.slice(0, 5) || []}
+                        dataKey="wickets"
+                        nameKey="playerName"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        label={({ playerName, wickets }) => `${wickets}`}
+                        labelLine={false}
+                      >
+                        {bowlers?.slice(0, 5).map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={['#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4'][index]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#fff', 
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '8px'
+                        }}
+                      />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={36}
+                        formatter={(value) => value.length > 15 ? value.substring(0, 15) + '...' : value}
+                      />
+                    </PieChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
               {/* Team Performance */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Team Performance Overview</h3>
-                <ResponsiveContainer width="100%" height={350}>
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold text-gray-900">Team Performance Overview</h3>
+                  <div className="flex gap-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-[#0F6D4E]"></div>
+                      <span className="text-gray-600">Wins</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
+                      <span className="text-gray-600">Losses</span>
+                    </div>
+                  </div>
+                </div>
+                <ResponsiveContainer width="100%" height={380}>
                   <BarChart data={teams || []}>
+                    <defs>
+                      <linearGradient id="winsGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#0F6D4E" stopOpacity={0.9}/>
+                        <stop offset="100%" stopColor="#10b981" stopOpacity={0.7}/>
+                      </linearGradient>
+                      <linearGradient id="lossesGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.9}/>
+                        <stop offset="100%" stopColor="#fca5a5" stopOpacity={0.7}/>
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                    <XAxis dataKey="teamName" axisLine={false} tickLine={false} />
-                    <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="wins" stackId="a" fill="#0F6D4E" name="Wins" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="losses" stackId="a" fill="#ef4444" name="Losses" />
+                    <XAxis 
+                      dataKey="teamName" 
+                      axisLine={false} 
+                      tickLine={false}
+                      tick={{ fontSize: 11 }}
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                    />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                      }}
+                    />
+                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                    <Bar dataKey="wins" stackId="a" fill="url(#winsGradient)" name="Wins" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="losses" stackId="a" fill="url(#lossesGradient)" name="Losses" />
                     <Bar dataKey="ties" stackId="a" fill="#f97316" name="Ties" />
                     <Bar dataKey="noResults" stackId="a" fill="#64748b" name="No Result" />
                   </BarChart>

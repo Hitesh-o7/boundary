@@ -28,6 +28,14 @@ import {
   ResponsiveContainer,
   Tooltip,
   Legend,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 
 const TeamsPage = () => {
@@ -173,9 +181,38 @@ const TeamsPage = () => {
           )}
 
           {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-gray-600">Loading teams data...</div>
-            </div>
+            <>
+              {/* Skeleton Stats Cards */}
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                    <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
+                    <div className="h-10 bg-gray-200 rounded w-12 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-16"></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skeleton Charts */}
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                {[1, 2].map((i) => (
+                  <div key={i} className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                    <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
+                    <div className="h-80 bg-gray-100 rounded"></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Skeleton Table */}
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+                <div className="h-6 bg-gray-200 rounded w-40 mb-6"></div>
+                <div className="space-y-3">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="h-20 bg-gray-100 rounded"></div>
+                  ))}
+                </div>
+              </div>
+            </>
           ) : (
             <>
               {/* Stats Cards */}
