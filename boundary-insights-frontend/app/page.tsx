@@ -80,9 +80,9 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#ff0000] p-2 gap-2">
+    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#f7f7f7] border-r border-gray-200 rounded-[15px] flex flex-col">
+      <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
         {/* Logo */}
         <div className="p-6">
           <div className="flex items-center gap-2">
@@ -103,8 +103,6 @@ const DashboardPage = () => {
               { icon: LayoutDashboard, label: 'Dashboard', badge: null },
               { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
               { icon: Trophy, label: 'Players', badge: null },
-              { icon: BarChart3, label: 'Analytics', badge: null },
-              { icon: Calendar, label: 'Matches', badge: null },
             ].map((item) => (
               <a
                 key={item.label}
@@ -124,25 +122,6 @@ const DashboardPage = () => {
                   </span>
                 )}
               </a>
-            ))}
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
-              GENERAL
-            </p>
-            {[
-              { icon: Settings, label: 'Settings' },
-              { icon: HelpCircle, label: 'Help' },
-              { icon: LogOut, label: 'Logout' },
-            ].map((item) => (
-              <button
-                key={item.label}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 text-gray-600 hover:bg-gray-50 transition-all"
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="flex-1 text-left font-medium">{item.label}</span>
-              </button>
             ))}
           </div>
         </nav>
@@ -170,7 +149,7 @@ const DashboardPage = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-[#f7f7f7] rounded-[15px] px-8 py-4 flex-shrink-0">
+        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex-1 max-w-xl">
               <div className="relative">
@@ -206,8 +185,8 @@ const DashboardPage = () => {
         </header>
 
         {/* Dashboard Content */}
-        <div className="flex-1 overflow-y-auto mt-2">
-          <div className="p-8 bg-[#f7f7f7] rounded-[15px] min-h-full">
+        <div className="flex-1 overflow-y-auto rounded-[15px] mt-2">
+          <div className="p-8 bg-[#f1f1f1]  min-h-full">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">IPL Dashboard</h1>
             <p className="text-gray-600">
