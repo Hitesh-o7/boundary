@@ -99,48 +99,47 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
+    <div className="flex h-screen bg-[#fafafa]">
       {/* Backend Startup Notification */}
       {showNotification && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 max-w-md">
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
+          <div className="bg-white border border-gray-200 px-5 py-3.5 rounded-xl card-shadow-lg flex items-center gap-3 max-w-md">
             <div className="flex-shrink-0">
-              <Info className="w-6 h-6" />
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                <Info className="w-4 h-4 text-blue-600" />
+              </div>
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-sm">Backend Starting Up</p>
-              <p className="text-xs text-blue-100 mt-1">
-                Data will be displayed shortly. This may take a moment on first load.
+              <p className="font-medium text-sm text-gray-900">Loading data...</p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Backend is starting up, this may take a moment.
               </p>
             </div>
             <button
               onClick={() => setShowNotification(false)}
-              className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
+              className="flex-shrink-0 hover:bg-gray-100 rounded-lg p-1.5 transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5 text-gray-400" />
             </button>
           </div>
         </div>
       )}
 
       {/* Sidebar */}
-      <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
+      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         {/* Logo */}
-        <div className="p-6">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-[#0F6D4E] rounded-xl flex items-center justify-center">
-              <Trophy className="w-6 h-6 text-white" />
+        <div className="px-6 py-5 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-sm">
+              <Trophy className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">Boundary</span>
+            <span className="text-lg font-semibold text-gray-900 tracking-tight">Boundary</span>
           </div>
         </div>
 
         {/* Menu */}
-        <nav className="flex-1 px-4">
-          <div className="mb-6">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
-              MENU
-            </p>
+        <nav className="flex-1 px-3 py-4">
+          <div className="space-y-1">
             {[
               { icon: LayoutDashboard, label: 'Dashboard', badge: null },
               { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
@@ -150,16 +149,16 @@ const DashboardPage = () => {
                 key={item.label}
                 href={item.label === 'Dashboard' ? '/' : `/${item.label.toLowerCase()}`}
                 onClick={() => setActiveMenu(item.label)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
+                className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
                   activeMenu === item.label
-                    ? 'bg-[#0F6D4E] text-white'
+                    ? 'bg-emerald-50 text-emerald-700'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                <item.icon className="w-5 h-5" />
-                <span className="flex-1 text-left font-medium">{item.label}</span>
+                <item.icon className={`w-5 h-5 ${activeMenu === item.label ? 'text-emerald-600' : 'text-gray-400'}`} />
+                <span className="flex-1 text-sm font-medium">{item.label}</span>
                 {item.badge && (
-                  <span className="bg-gray-900 text-white text-xs font-bold px-2 py-0.5 rounded">
+                  <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-0.5 rounded-md">
                     {item.badge}
                   </span>
                 )}
@@ -168,77 +167,65 @@ const DashboardPage = () => {
           </div>
         </nav>
 
-        {/* API Status */}
-        <div className="p-4">
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="font-bold mb-1">IPL 2022 Data</h3>
-              <p className="text-sm text-gray-300 mb-4">
-                {loading ? 'Loading...' : `${totalMatches} matches analyzed`}
-              </p>
-              <a
-                href="/docs"
-                className="w-full bg-[#0F6D4E] hover:bg-[#145C44] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                API Docs
-              </a>
+        {/* Data Info */}
+        <div className="p-3 border-t border-gray-100">
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center flex-shrink-0">
+                <Trophy className="w-4 h-4 text-gray-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-sm text-gray-900 mb-0.5">IPL 2022</h4>
+                <p className="text-xs text-gray-500">
+                  {loading ? 'Loading...' : `${totalMatches} matches`}
+                </p>
+              </div>
             </div>
+            <a
+              href="/docs"
+              className="w-full bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2 border border-gray-200"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>API Docs</span>
+            </a>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden bg-[#fafafa]">
         {/* Header */}
-        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
+        <header className="bg-white border-b border-gray-200 px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex-1 max-w-xl">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search teams, players..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-[40px] focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
-                />
-                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
-                  ⌘ F
-                </kbd>
-              </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
+              <p className="text-sm text-gray-500 mt-0.5">IPL 2022 Season Analytics</p>
             </div>
 
-            <div className="flex items-center gap-4 ml-8">
-              <button className="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-              </button>
-
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                  BI
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">Boundary Insights</p>
-                  <p className="text-xs text-gray-500">IPL Analytics</p>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="w-64 pl-9 pr-4 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                />
               </div>
+              
+              <button className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white" />
+              </button>
             </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <div className="flex-1 overflow-y-auto rounded-[15px] mt-2">
-          <div className="p-8 bg-[#f1f1f1]  min-h-full">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">IPL Dashboard</h1>
-            <p className="text-gray-600">
-              Analyze performance, track statistics, and explore match insights.
-            </p>
-          </div>
-
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-8">
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              Error: {error}
+            <div className="mb-6 bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-xl text-sm">
+              <strong className="font-semibold">Error:</strong> {error}
             </div>
           )}
 

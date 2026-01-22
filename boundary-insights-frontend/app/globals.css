@@ -2,32 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* SF Fonts Configuration */
+/* Professional SaaS Design System */
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  /* Neutral Palette */
+  --bg-base: #fafafa;
+  --bg-elevated: #ffffff;
+  --border-subtle: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  
+  /* Brand Colors */
+  --brand-primary: #10b981;
+  --brand-primary-hover: #059669;
+  --brand-secondary: #6366f1;
+  
+  /* Chart Colors - Muted & Professional */
+  --chart-blue: #3b82f6;
+  --chart-purple: #8b5cf6;
+  --chart-green: #10b981;
+  --chart-orange: #f59e0b;
+  --chart-red: #ef4444;
+  --chart-teal: #14b8a6;
 }
 
 body {
   font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1;
   letter-spacing: -0.011em;
+  background: var(--bg-base);
+  color: var(--text-primary);
 }
 
-/* SF Pro Display for headings */
+/* Typography Hierarchy */
 h1, h2, h3, h4, h5, h6, 
 .font-display,
 .text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl, .text-6xl {
   font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
   letter-spacing: -0.022em;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
-/* Monospace for code */
-code, pre, kbd {
-  font-family: "SF Mono", "Monaco", "Cascadia Code", "Courier New", monospace;
+/* Professional Card Shadows */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
 }
 
+.card-shadow-lg {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+.card-shadow-hover {
+  transition: box-shadow 0.2s ease;
+}
+
+.card-shadow-hover:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* Animations */
 @keyframes slide-down {
   from {
     opacity: 0;
@@ -41,5 +80,39 @@ code, pre, kbd {
 
 .animate-slide-down {
   animation: slide-down 0.4s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
