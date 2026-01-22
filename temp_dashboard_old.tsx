@@ -21,8 +21,6 @@ import {
   Download,
   Trophy,
   Target,
-  Info,
-  X,
 } from 'lucide-react';
 import {
   BarChart,
@@ -58,16 +56,6 @@ const DashboardPage = () => {
   const [matches, setMatches] = useState<PaginatedMatchesDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showNotification, setShowNotification] = useState(true);
-
-  useEffect(() => {
-    // Auto-hide notification after 8 seconds
-    const timer = setTimeout(() => {
-      setShowNotification(false);
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -82,8 +70,6 @@ const DashboardPage = () => {
         setBowlers(bowl);
         setTeams(perf);
         setMatches(matchPage);
-        // Hide notification once data loads
-        setShowNotification(false);
       } catch (e: any) {
         setError(e.message ?? 'Failed to load dashboard');
       } finally {
@@ -99,47 +85,25 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#fafafa]">
-      {/* Backend Startup Notification */}
-      {showNotification && (
-        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
-          <div className="bg-white border border-gray-200 px-5 py-3.5 rounded-xl card-shadow-lg flex items-center gap-3 max-w-md">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                <Info className="w-4 h-4 text-blue-600" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <p className="font-medium text-sm text-gray-900">Loading data...</p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Backend is starting up, this may take a moment.
-              </p>
-            </div>
-            <button
-              onClick={() => setShowNotification(false)}
-              className="flex-shrink-0 hover:bg-gray-100 rounded-lg p-1.5 transition-colors"
-            >
-              <X className="w-3.5 h-3.5 text-gray-400" />
-            </button>
-          </div>
-        </div>
-      )}
-
+    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+      <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
         {/* Logo */}
-        <div className="px-6 py-5 border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center shadow-sm">
-              <Trophy className="w-5 h-5 text-white" />
+        <div className="p-6">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-[#0F6D4E] rounded-xl flex items-center justify-center">
+              <Trophy className="w-6 h-6 text-white" />
             </div>
-            <span className="text-lg font-semibold text-gray-900 tracking-tight">Boundary</span>
+            <span className="text-xl font-bold text-gray-900">Boundary</span>
           </div>
         </div>
 
         {/* Menu */}
-        <nav className="flex-1 px-3 py-4">
-          <div className="space-y-1">
+        <nav className="flex-1 px-4">
+          <div className="mb-6">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
+              MENU
+            </p>
             {[
               { icon: LayoutDashboard, label: 'Dashboard', badge: null },
               { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
@@ -149,16 +113,16 @@ const DashboardPage = () => {
                 key={item.label}
                 href={item.label === 'Dashboard' ? '/' : `/${item.label.toLowerCase()}`}
                 onClick={() => setActiveMenu(item.label)}
-                className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
                   activeMenu === item.label
-                    ? 'bg-emerald-50 text-emerald-700'
+                    ? 'bg-[#0F6D4E] text-white'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                <item.icon className={`w-5 h-5 ${activeMenu === item.label ? 'text-emerald-600' : 'text-gray-400'}`} />
-                <span className="flex-1 text-sm font-medium">{item.label}</span>
+                <item.icon className="w-5 h-5" />
+                <span className="flex-1 text-left font-medium">{item.label}</span>
                 {item.badge && (
-                  <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2 py-0.5 rounded-md">
+                  <span className="bg-gray-900 text-white text-xs font-bold px-2 py-0.5 rounded">
                     {item.badge}
                   </span>
                 )}
@@ -167,65 +131,77 @@ const DashboardPage = () => {
           </div>
         </nav>
 
-        {/* Data Info */}
-        <div className="p-3 border-t border-gray-100">
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
-            <div className="flex items-start gap-3 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center flex-shrink-0">
-                <Trophy className="w-4 h-4 text-gray-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-sm text-gray-900 mb-0.5">IPL 2022</h4>
-                <p className="text-xs text-gray-500">
-                  {loading ? 'Loading...' : `${totalMatches} matches`}
-                </p>
-              </div>
+        {/* API Status */}
+        <div className="p-4">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="font-bold mb-1">IPL 2022 Data</h3>
+              <p className="text-sm text-gray-300 mb-4">
+                {loading ? 'Loading...' : `${totalMatches} matches analyzed`}
+              </p>
+              <a
+                href="/docs"
+                className="w-full bg-[#0F6D4E] hover:bg-[#145C44] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                API Docs
+              </a>
             </div>
-            <a
-              href="/docs"
-              className="w-full bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2 border border-gray-200"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>API Docs</span>
-            </a>
           </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-[#fafafa]">
+      <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-8 py-4 flex-shrink-0">
+        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
-              <p className="text-sm text-gray-500 mt-0.5">IPL 2022 Season Analytics</p>
-            </div>
-
-            <div className="flex items-center gap-3">
+            <div className="flex-1 max-w-xl">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Search..."
-                  className="w-64 pl-9 pr-4 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  placeholder="Search teams, players..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-[40px] focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
                 />
+                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
+                  Γîÿ F
+                </kbd>
               </div>
-              
-              <button className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white" />
+            </div>
+
+            <div className="flex items-center gap-4 ml-8">
+              <button className="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <Bell className="w-6 h-6" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
               </button>
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                  BI
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Boundary Insights</p>
+                  <p className="text-xs text-gray-500">IPL Analytics</p>
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-8">
+        <div className="flex-1 overflow-y-auto rounded-[15px] mt-2">
+          <div className="p-8 bg-[#f1f1f1]  min-h-full">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">IPL Dashboard</h1>
+            <p className="text-gray-600">
+              Analyze performance, track statistics, and explore match insights.
+            </p>
+          </div>
+
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-xl text-sm">
-              <strong className="font-semibold">Error:</strong> {error}
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              Error: {error}
             </div>
           )}
 
@@ -273,56 +249,65 @@ const DashboardPage = () => {
           ) : (
             <>
               {/* KPI Cards */}
-              <div className="grid grid-cols-4 gap-5 mb-8">
-                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
-                      <Trophy className="w-5 h-5 text-emerald-600" />
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-[#0F6D4E] to-[#145C44] rounded-2xl p-6 text-white relative overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
-                      +12%
-                    </span>
                   </div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Matches</p>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-1">{totalMatches}</h2>
-                  <p className="text-xs text-gray-500">IPL 2022 Season</p>
+                  <p className="text-sm font-medium text-white/80 mb-2">Total Matches</p>
+                  <h2 className="text-5xl font-bold mb-3">{totalMatches}</h2>
+                  <div className="flex items-center gap-1 text-sm">
+                    <Trophy className="w-4 h-4" />
+                    <span>IPL 2022 Season</span>
+                  </div>
                 </div>
 
-                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <Users className="w-5 h-5 text-blue-600" />
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Teams</p>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-1">{teams?.length || 0}</h2>
-                  <p className="text-xs text-gray-500">Active franchises</p>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Total Teams</p>
+                  <h2 className="text-5xl font-bold text-gray-900 mb-3">{teams?.length || 0}</h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <Users className="w-4 h-4" />
+                    <span>Active franchises</span>
+                  </div>
                 </div>
 
-                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
-                      <TrendingUp className="w-5 h-5 text-purple-600" />
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Top Scorer</p>
-                  <h2 className="text-lg font-bold text-gray-900 mb-1 truncate">
+                  <p className="text-sm font-medium text-gray-600 mb-2">Top Scorer</p>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
                     {batsmen?.[0]?.playerName || 'N/A'}
                   </h2>
-                  <p className="text-xs text-gray-500">{batsmen?.[0]?.totalRuns || 0} runs</p>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <TrendingUp className="w-4 h-4" />
+                    <span>{batsmen?.[0]?.totalRuns || 0} runs</span>
+                  </div>
                 </div>
 
-                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center">
-                      <Target className="w-5 h-5 text-orange-600" />
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
                     </div>
                   </div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Top Bowler</p>
-                  <h2 className="text-lg font-bold text-gray-900 mb-1 truncate">
+                  <p className="text-sm font-medium text-gray-600 mb-2">Top Bowler</p>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
                     {bowlers?.[0]?.playerName || 'N/A'}
                   </h2>
-                  <p className="text-xs text-gray-500">{bowlers?.[0]?.wickets || 0} wickets</p>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <Target className="w-4 h-4" />
+                    <span>{bowlers?.[0]?.wickets || 0} wickets</span>
+                  </div>
                 </div>
               </div>
 
