@@ -273,65 +273,56 @@ const DashboardPage = () => {
           ) : (
             <>
               {/* KPI Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-[#0F6D4E] to-[#145C44] rounded-2xl p-6 text-white relative overflow-hidden">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5" />
+              <div className="grid grid-cols-4 gap-5 mb-8">
+                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                      <Trophy className="w-5 h-5 text-emerald-600" />
                     </div>
+                    <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
+                      +12%
+                    </span>
                   </div>
-                  <p className="text-sm font-medium text-white/80 mb-2">Total Matches</p>
-                  <h2 className="text-5xl font-bold mb-3">{totalMatches}</h2>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Trophy className="w-4 h-4" />
-                    <span>IPL 2022 Season</span>
-                  </div>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Matches</p>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-1">{totalMatches}</h2>
+                  <p className="text-xs text-gray-500">IPL 2022 Season</p>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-blue-600" />
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Total Teams</p>
-                  <h2 className="text-5xl font-bold text-gray-900 mb-3">{teams?.length || 0}</h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Users className="w-4 h-4" />
-                    <span>Active franchises</span>
-                  </div>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Total Teams</p>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-1">{teams?.length || 0}</h2>
+                  <p className="text-xs text-gray-500">Active franchises</p>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                      <TrendingUp className="w-5 h-5 text-purple-600" />
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Top Scorer</p>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Top Scorer</p>
+                  <h2 className="text-lg font-bold text-gray-900 mb-1 truncate">
                     {batsmen?.[0]?.playerName || 'N/A'}
                   </h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <TrendingUp className="w-4 h-4" />
-                    <span>{batsmen?.[0]?.totalRuns || 0} runs</span>
-                  </div>
+                  <p className="text-xs text-gray-500">{batsmen?.[0]?.totalRuns || 0} runs</p>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                <div className="bg-white rounded-xl p-5 border border-gray-200 card-shadow hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center">
+                      <Target className="w-5 h-5 text-orange-600" />
                     </div>
                   </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Top Bowler</p>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Top Bowler</p>
+                  <h2 className="text-lg font-bold text-gray-900 mb-1 truncate">
                     {bowlers?.[0]?.playerName || 'N/A'}
                   </h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Target className="w-4 h-4" />
-                    <span>{bowlers?.[0]?.wickets || 0} wickets</span>
-                  </div>
+                  <p className="text-xs text-gray-500">{bowlers?.[0]?.wickets || 0} wickets</p>
                 </div>
               </div>
 
