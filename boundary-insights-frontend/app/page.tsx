@@ -313,47 +313,62 @@ const DashboardPage = () => {
 
               {/* Charts Grid */}
               <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen - Gradient Bars */}
+                {/* Top Batsmen */}
                 <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-gray-900">Top Batsmen by Runs</h3>
-                    <span className="text-sm text-gray-500">IPL 2022</span>
+                  <div className="mb-6">
+                    <h3 className="text-base font-semibold text-gray-900">Top Batsmen</h3>
+                    <p className="text-sm text-gray-500 mt-1">Leading run scorers this season</p>
                   </div>
                   <ResponsiveContainer width="100%" height={320}>
-                    <BarChart data={batsmen?.slice(0, 8) || []} layout="vertical">
-                      <defs>
-                        <linearGradient id="batsmenGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="#0F6D4E" stopOpacity={0.8}/>
-                          <stop offset="100%" stopColor="#10b981" stopOpacity={0.9}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                      <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                    <BarChart data={batsmen?.slice(0, 8) || []} layout="vertical" margin={{ left: 10 }}>
+                      <CartesianGrid 
+                        strokeDasharray="0" 
+                        horizontal={true}
+                        vertical={false} 
+                        stroke="#f3f4f6"
+                        strokeWidth={1}
+                      />
+                      <XAxis 
+                        type="number" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                      />
                       <YAxis 
                         type="category" 
                         dataKey="playerName" 
                         axisLine={false} 
                         tickLine={false}
-                        width={140}
-                        tick={{ fontSize: 12 }}
+                        width={130}
+                        tick={{ fontSize: 11, fill: '#6b7280' }}
                       />
                       <Tooltip 
+                        cursor={{ fill: '#f9fafb' }}
                         contentStyle={{ 
                           backgroundColor: '#fff', 
-                          border: '1px solid #e5e7eb',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                          padding: '12px'
                         }}
+                        labelStyle={{ fontSize: 13, fontWeight: 600, color: '#111827' }}
+                        itemStyle={{ fontSize: 12, color: '#6b7280' }}
                       />
-                      <Bar dataKey="totalRuns" fill="url(#batsmenGradient)" radius={[0, 8, 8, 0]} />
+                      <Bar 
+                        dataKey="totalRuns" 
+                        fill="#a78bfa"
+                        radius={[0, 8, 8, 0]}
+                        maxBarSize={28}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
-                {/* Top Bowlers - Pie Chart */}
+                {/* Top Bowlers - Donut Chart */}
                 <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-gray-900">Top 5 Wicket Takers</h3>
+                  <div className="mb-6">
+                    <h3 className="text-base font-semibold text-gray-900">Top Bowlers</h3>
+                    <p className="text-sm text-gray-500 mt-1">Wicket distribution</p>
                   </div>
                   <ResponsiveContainer width="100%" height={320}>
                     <PieChart>
@@ -362,26 +377,35 @@ const DashboardPage = () => {
                         dataKey="wickets"
                         nameKey="playerName"
                         cx="50%"
-                        cy="50%"
-                        outerRadius={100}
-                        label={({ playerName, wickets }) => `${wickets}`}
-                        labelLine={false}
+                        cy="45%"
+                        innerRadius={70}
+                        outerRadius={95}
+                        paddingAngle={2}
                       >
                         {bowlers?.slice(0, 5).map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={['#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4'][index]} />
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa'][index]} 
+                          />
                         ))}
                       </Pie>
                       <Tooltip 
                         contentStyle={{ 
                           backgroundColor: '#fff', 
-                          border: '1px solid #e5e7eb',
-                          borderRadius: '8px'
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                          padding: '10px 14px'
                         }}
+                        itemStyle={{ fontSize: 12, color: '#6b7280' }}
                       />
                       <Legend 
                         verticalAlign="bottom" 
-                        height={36}
-                        formatter={(value) => value.length > 15 ? value.substring(0, 15) + '...' : value}
+                        height={50}
+                        iconType="circle"
+                        iconSize={8}
+                        wrapperStyle={{ fontSize: '11px', paddingTop: '16px' }}
+                        formatter={(value) => value.length > 12 ? value.substring(0, 12) + '...' : value}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -390,55 +414,78 @@ const DashboardPage = () => {
 
               {/* Team Performance */}
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-gray-900">Team Performance Overview</h3>
-                  <div className="flex gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-[#0F6D4E]"></div>
-                      <span className="text-gray-600">Wins</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
-                      <span className="text-gray-600">Losses</span>
-                    </div>
-                  </div>
+                <div className="mb-6">
+                  <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
+                  <p className="text-sm text-gray-500 mt-1">Win/loss distribution across all teams</p>
                 </div>
-                <ResponsiveContainer width="100%" height={380}>
-                  <BarChart data={teams || []}>
-                    <defs>
-                      <linearGradient id="winsGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#0F6D4E" stopOpacity={0.9}/>
-                        <stop offset="100%" stopColor="#10b981" stopOpacity={0.7}/>
-                      </linearGradient>
-                      <linearGradient id="lossesGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.9}/>
-                        <stop offset="100%" stopColor="#fca5a5" stopOpacity={0.7}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <ResponsiveContainer width="100%" height={350}>
+                  <BarChart data={teams || []} margin={{ bottom: 60 }}>
+                    <CartesianGrid 
+                      strokeDasharray="0" 
+                      vertical={false} 
+                      stroke="#f3f4f6"
+                      strokeWidth={1}
+                    />
                     <XAxis 
                       dataKey="teamName" 
                       axisLine={false} 
                       tickLine={false}
-                      tick={{ fontSize: 11 }}
+                      tick={{ fontSize: 10, fill: '#9ca3af' }}
                       angle={-45}
                       textAnchor="end"
-                      height={80}
+                      height={85}
                     />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 11, fill: '#9ca3af' }}
+                    />
                     <Tooltip 
+                      cursor={{ fill: '#f9fafb' }}
                       contentStyle={{ 
                         backgroundColor: '#fff', 
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        border: 'none',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                        padding: '12px'
                       }}
+                      labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 8 }}
+                      itemStyle={{ fontSize: 11, color: '#6b7280' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar dataKey="wins" stackId="a" fill="url(#winsGradient)" name="Wins" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="losses" stackId="a" fill="url(#lossesGradient)" name="Losses" />
-                    <Bar dataKey="ties" stackId="a" fill="#f97316" name="Ties" />
-                    <Bar dataKey="noResults" stackId="a" fill="#64748b" name="No Result" />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '16px', fontSize: '11px' }}
+                      iconType="circle"
+                      iconSize={8}
+                    />
+                    <Bar 
+                      dataKey="wins" 
+                      stackId="a" 
+                      fill="#86efac" 
+                      name="Wins" 
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={40}
+                    />
+                    <Bar 
+                      dataKey="losses" 
+                      stackId="a" 
+                      fill="#fca5a5" 
+                      name="Losses"
+                      maxBarSize={40}
+                    />
+                    <Bar 
+                      dataKey="ties" 
+                      stackId="a" 
+                      fill="#fde047" 
+                      name="Ties"
+                      maxBarSize={40}
+                    />
+                    <Bar 
+                      dataKey="noResults" 
+                      stackId="a" 
+                      fill="#cbd5e1" 
+                      name="No Result"
+                      maxBarSize={40}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

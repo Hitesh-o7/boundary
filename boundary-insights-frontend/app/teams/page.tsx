@@ -301,17 +301,64 @@ const TeamsPage = () => {
               </div>
 
               {/* Team Performance Chart */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Team Performance Comparison</h3>
-                <ResponsiveContainer width="100%" height={350}>
-                  <BarChart data={teams || []}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                    <XAxis dataKey="teamName" axisLine={false} tickLine={false} angle={-45} textAnchor="end" height={100} />
-                    <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="wins" fill="#0F6D4E" name="Wins" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="losses" fill="#ef4444" name="Losses" radius={[8, 8, 0, 0]} />
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8 shadow-sm">
+                <div className="mb-6">
+                  <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
+                  <p className="text-sm text-gray-500 mt-1">Win/loss comparison</p>
+                </div>
+                <ResponsiveContainer width="100%" height={340}>
+                  <BarChart data={teams || []} margin={{ bottom: 60 }}>
+                    <CartesianGrid 
+                      strokeDasharray="0" 
+                      vertical={false} 
+                      stroke="#f3f4f6"
+                      strokeWidth={1}
+                    />
+                    <XAxis 
+                      dataKey="teamName" 
+                      axisLine={false} 
+                      tickLine={false}
+                      tick={{ fontSize: 10, fill: '#9ca3af' }}
+                      angle={-45}
+                      textAnchor="end"
+                      height={90}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: '#9ca3af' }}
+                    />
+                    <Tooltip 
+                      cursor={{ fill: '#f9fafb' }}
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        border: 'none',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                        padding: '12px'
+                      }}
+                      labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 8 }}
+                      itemStyle={{ fontSize: 11, color: '#6b7280' }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '16px', fontSize: '11px' }}
+                      iconType="circle"
+                      iconSize={8}
+                    />
+                    <Bar 
+                      dataKey="wins" 
+                      fill="#86efac" 
+                      name="Wins" 
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={40}
+                    />
+                    <Bar 
+                      dataKey="losses" 
+                      fill="#fca5a5" 
+                      name="Losses" 
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={40}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

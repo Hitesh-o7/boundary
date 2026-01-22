@@ -303,41 +303,103 @@ const PlayersPage = () => {
               {/* Charts Grid */}
               <div className="grid grid-cols-2 gap-6 mb-8">
                 {/* Top Batsmen Chart */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-6">Top 10 Batsmen</h3>
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="mb-6">
+                    <h3 className="text-base font-semibold text-gray-900">Top 10 Batsmen</h3>
+                    <p className="text-sm text-gray-500 mt-1">Highest run scorers</p>
+                  </div>
                   <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={batsmen?.slice(0, 10) || []} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                      <XAxis type="number" axisLine={false} tickLine={false} />
+                    <BarChart data={batsmen?.slice(0, 10) || []} layout="vertical" margin={{ left: 10 }}>
+                      <CartesianGrid 
+                        strokeDasharray="0" 
+                        horizontal={true}
+                        vertical={false} 
+                        stroke="#f3f4f6"
+                        strokeWidth={1}
+                      />
+                      <XAxis 
+                        type="number" 
+                        axisLine={false} 
+                        tickLine={false}
+                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                      />
                       <YAxis
                         type="category"
                         dataKey="playerName"
                         axisLine={false}
                         tickLine={false}
-                        width={120}
+                        width={130}
+                        tick={{ fontSize: 11, fill: '#6b7280' }}
                       />
-                      <Tooltip />
-                      <Bar dataKey="totalRuns" fill="#0F6D4E" radius={[0, 8, 8, 0]} />
+                      <Tooltip 
+                        cursor={{ fill: '#f9fafb' }}
+                        contentStyle={{ 
+                          backgroundColor: '#fff', 
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                          padding: '12px'
+                        }}
+                        labelStyle={{ fontSize: 13, fontWeight: 600, color: '#111827' }}
+                        itemStyle={{ fontSize: 12, color: '#6b7280' }}
+                      />
+                      <Bar 
+                        dataKey="totalRuns" 
+                        fill="#a78bfa" 
+                        radius={[0, 6, 6, 0]}
+                        maxBarSize={32}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
                 {/* Top Bowlers Chart */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-6">Top 10 Bowlers</h3>
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="mb-6">
+                    <h3 className="text-base font-semibold text-gray-900">Top 10 Bowlers</h3>
+                    <p className="text-sm text-gray-500 mt-1">Most wickets taken</p>
+                  </div>
                   <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={bowlers?.slice(0, 10) || []} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                      <XAxis type="number" axisLine={false} tickLine={false} />
+                    <BarChart data={bowlers?.slice(0, 10) || []} layout="vertical" margin={{ left: 10 }}>
+                      <CartesianGrid 
+                        strokeDasharray="0" 
+                        horizontal={true}
+                        vertical={false} 
+                        stroke="#f3f4f6"
+                        strokeWidth={1}
+                      />
+                      <XAxis 
+                        type="number" 
+                        axisLine={false} 
+                        tickLine={false}
+                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                      />
                       <YAxis
                         type="category"
                         dataKey="playerName"
                         axisLine={false}
                         tickLine={false}
-                        width={120}
+                        width={130}
+                        tick={{ fontSize: 11, fill: '#6b7280' }}
                       />
-                      <Tooltip />
-                      <Bar dataKey="wickets" fill="#ef4444" radius={[0, 8, 8, 0]} />
+                      <Tooltip 
+                        cursor={{ fill: '#f9fafb' }}
+                        contentStyle={{ 
+                          backgroundColor: '#fff', 
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                          padding: '12px'
+                        }}
+                        labelStyle={{ fontSize: 13, fontWeight: 600, color: '#111827' }}
+                        itemStyle={{ fontSize: 12, color: '#6b7280' }}
+                      />
+                      <Bar 
+                        dataKey="wickets" 
+                        fill="#fbbf24" 
+                        radius={[0, 6, 6, 0]}
+                        maxBarSize={32}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
