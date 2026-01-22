@@ -364,51 +364,41 @@ const DashboardPage = () => {
                   </ResponsiveContainer>
                 </div>
 
-                {/* Top Bowlers - Donut Chart */}
+                {/* Top Bowlers - Progress Bars */}
                 <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
                   <div className="mb-6">
                     <h3 className="text-base font-semibold text-gray-900">Top Bowlers</h3>
-                    <p className="text-sm text-gray-500 mt-1">Wicket distribution</p>
+                    <p className="text-sm text-gray-500 mt-1">Wicket leaders</p>
                   </div>
-                  <ResponsiveContainer width="100%" height={320}>
-                    <PieChart>
-                      <Pie
-                        data={bowlers?.slice(0, 5) || []}
-                        dataKey="wickets"
-                        nameKey="playerName"
-                        cx="50%"
-                        cy="45%"
-                        innerRadius={70}
-                        outerRadius={95}
-                        paddingAngle={2}
-                      >
-                        {bowlers?.slice(0, 5).map((_, index) => (
-                          <Cell 
-                            key={`cell-${index}`} 
-                            fill={['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa'][index]} 
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: 'none',
-                          borderRadius: '12px',
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                          padding: '10px 14px'
-                        }}
-                        itemStyle={{ fontSize: 12, color: '#6b7280' }}
-                      />
-                      <Legend 
-                        verticalAlign="bottom" 
-                        height={50}
-                        iconType="circle"
-                        iconSize={8}
-                        wrapperStyle={{ fontSize: '11px', paddingTop: '16px' }}
-                        formatter={(value) => value.length > 12 ? value.substring(0, 12) + '...' : value}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-5">
+                    {bowlers?.slice(0, 6).map((bowler, index) => {
+                      const maxWickets = bowlers[0]?.wickets || 1;
+                      const percentage = (bowler.wickets / maxWickets) * 100;
+                      const colors = ['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa', '#34d399'];
+                      
+                      return (
+                        <div key={bowler.playerId}>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {bowler.playerName}
+                            </p>
+                            <span className="text-sm font-semibold text-gray-700 ml-2">
+                              {bowler.wickets}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{ 
+                                width: `${percentage}%`,
+                                backgroundColor: colors[index]
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
