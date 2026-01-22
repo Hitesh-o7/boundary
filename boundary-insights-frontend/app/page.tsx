@@ -313,55 +313,51 @@ const DashboardPage = () => {
 
               {/* Charts Grid */}
               <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen */}
+                {/* Top Batsmen - Segmented Progress */}
                 <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
                   <div className="mb-6">
                     <h3 className="text-base font-semibold text-gray-900">Top Batsmen</h3>
-                    <p className="text-sm text-gray-500 mt-1">Leading run scorers this season</p>
+                    <p className="text-sm text-gray-500 mt-1">Leading run scorers</p>
                   </div>
-                  <ResponsiveContainer width="100%" height={320}>
-                    <BarChart data={batsmen?.slice(0, 8) || []} layout="vertical" margin={{ left: 10 }}>
-                      <CartesianGrid 
-                        strokeDasharray="0" 
-                        horizontal={true}
-                        vertical={false} 
-                        stroke="#f3f4f6"
-                        strokeWidth={1}
-                      />
-                      <XAxis 
-                        type="number" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fontSize: 11, fill: '#9ca3af' }}
-                      />
-                      <YAxis 
-                        type="category" 
-                        dataKey="playerName" 
-                        axisLine={false} 
-                        tickLine={false}
-                        width={130}
-                        tick={{ fontSize: 11, fill: '#6b7280' }}
-                      />
-                      <Tooltip 
-                        cursor={{ fill: '#f9fafb' }}
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: 'none',
-                          borderRadius: '12px',
-                          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                          padding: '12px'
-                        }}
-                        labelStyle={{ fontSize: 13, fontWeight: 600, color: '#111827' }}
-                        itemStyle={{ fontSize: 12, color: '#6b7280' }}
-                      />
-                      <Bar 
-                        dataKey="totalRuns" 
-                        fill="#a78bfa"
-                        radius={[0, 8, 8, 0]}
-                        maxBarSize={28}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+                    {batsmen?.slice(0, 8).map((batsman, index) => {
+                      // Use a reasonable fixed scale (e.g., 600 runs = full bar for IPL)
+                      const maxRunsScale = 600;
+                      const percentage = Math.min(1, batsman.totalRuns / maxRunsScale);
+                      const filledSegments = Math.max(1, Math.round(percentage * 6));
+                      const totalSegments = 6;
+                      const colors = [
+                        '#a78bfa', '#60a5fa', '#34d399', '#fbbf24',
+                        '#fb923c', '#f87171', '#ec4899', '#8b5cf6'
+                      ];
+                      
+                      return (
+                        <div key={batsman.playerId}>
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {batsman.playerName}
+                            </p>
+                            <span className="text-sm font-semibold text-gray-700 ml-2">
+                              {batsman.totalRuns}
+                            </span>
+                          </div>
+                          <div className="flex gap-1">
+                            {Array.from({ length: totalSegments }).map((_, segIndex) => (
+                              <div
+                                key={segIndex}
+                                className="h-2.5 rounded-full flex-1 transition-all duration-500"
+                                style={{
+                                  backgroundColor: segIndex < filledSegments 
+                                    ? colors[index]
+                                    : colors[index] + '15'
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Top Bowlers - Segmented Progress */}
