@@ -67,8 +67,15 @@ const PlayersPage = () => {
       {/* Sidebar */}
       <aside className="w-72 bg-white flex flex-col px-6 py-6   ">
         {/* Logo */}
-        <div className="mb-8">
-          <h1 className="text-xl font-bold text-gray-900">Boundary Insights_</h1>
+        <div className="mb-8 flex items-center gap-3">
+          <Image
+            src="/images/logo.svg"
+            alt="Boundary Logo"
+            width={32}
+            height={32}
+            className="w-8 h-8"
+          />
+          <h1 className="text-xl font-bold text-gray-900">Boundary</h1>
         </div>
 
         {/* Profile Card */}
