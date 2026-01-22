@@ -36,6 +36,8 @@ import {
   Cell,
   LineChart,
   Line,
+  AreaChart,
+  Area,
 } from 'recharts';
 import {
   getTopBatsmen,
@@ -405,18 +407,37 @@ const DashboardPage = () => {
                 </div>
               </div>
 
-              {/* Team Performance */}
+              {/* Team Performance - Area Chart */}
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
-                <div className="mb-6">
-                  <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
-                  <p className="text-sm text-gray-500 mt-1">Win/loss distribution across all teams</p>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900">Team Performance Overview</h3>
+                    <p className="text-sm text-gray-500 mt-1">Wins and matches played over teams</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                      Wins
+                    </button>
+                    <button className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">
+                      All
+                    </button>
+                  </div>
                 </div>
-                <ResponsiveContainer width="100%" height={350}>
-                  <BarChart data={teams || []} margin={{ bottom: 60 }}>
+                <ResponsiveContainer width="100%" height={280}>
+                  <AreaChart 
+                    data={teams || []} 
+                    margin={{ top: 10, right: 20, left: 0, bottom: 50 }}
+                  >
+                    <defs>
+                      <linearGradient id="colorTeamWins" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
+                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.02}/>
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid 
-                      strokeDasharray="0" 
+                      strokeDasharray="3 3" 
                       vertical={false} 
-                      stroke="#f3f4f6"
+                      stroke="#f0f0f0"
                       strokeWidth={1}
                     />
                     <XAxis 
@@ -424,62 +445,36 @@ const DashboardPage = () => {
                       axisLine={false} 
                       tickLine={false}
                       tick={{ fontSize: 10, fill: '#9ca3af' }}
-                      angle={-45}
+                      angle={-35}
                       textAnchor="end"
-                      height={85}
+                      height={75}
                     />
                     <YAxis 
                       axisLine={false} 
-                      tickLine={false} 
+                      tickLine={false}
                       tick={{ fontSize: 11, fill: '#9ca3af' }}
                     />
                     <Tooltip 
-                      cursor={{ fill: '#f9fafb' }}
                       contentStyle={{ 
                         backgroundColor: '#fff', 
                         border: 'none',
                         borderRadius: '12px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                        padding: '12px'
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                        padding: '12px 16px'
                       }}
-                      labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 8 }}
+                      labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 6 }}
                       itemStyle={{ fontSize: 11, color: '#6b7280' }}
                     />
-                    <Legend 
-                      wrapperStyle={{ paddingTop: '16px', fontSize: '11px' }}
-                      iconType="circle"
-                      iconSize={8}
-                    />
-                    <Bar 
+                    <Area 
+                      type="monotone" 
                       dataKey="wins" 
-                      stackId="a" 
-                      fill="#86efac" 
-                      name="Wins" 
-                      radius={[6, 6, 0, 0]}
-                      maxBarSize={40}
+                      stroke="#60a5fa" 
+                      strokeWidth={2.5}
+                      fill="url(#colorTeamWins)"
+                      dot={{ fill: '#60a5fa', strokeWidth: 0, r: 3 }}
+                      activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }}
                     />
-                    <Bar 
-                      dataKey="losses" 
-                      stackId="a" 
-                      fill="#fca5a5" 
-                      name="Losses"
-                      maxBarSize={40}
-                    />
-                    <Bar 
-                      dataKey="ties" 
-                      stackId="a" 
-                      fill="#fde047" 
-                      name="Ties"
-                      maxBarSize={40}
-                    />
-                    <Bar 
-                      dataKey="noResults" 
-                      stackId="a" 
-                      fill="#cbd5e1" 
-                      name="No Result"
-                      maxBarSize={40}
-                    />
-                  </BarChart>
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
 
