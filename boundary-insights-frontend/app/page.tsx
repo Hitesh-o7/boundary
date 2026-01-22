@@ -56,8 +56,19 @@ const DashboardPage = () => {
   const [bowlers, setBowlers] = useState<TopBowlerDto[] | null>(null);
   const [teams, setTeams] = useState<TeamPerformanceDto[] | null>(null);
   const [matches, setMatches] = useState<PaginatedMatchesDto | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const loadMatches = async (page: number) => {
+    try {
+      const matchPage = await getMatches(page, 5);
+      setMatches(matchPage);
+      setCurrentPage(page);
+    } catch (e: any) {
+      setError(e.message ?? 'Failed to load matches');
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -66,7 +77,7 @@ const DashboardPage = () => {
           getTopBatsmen(10),
           getTopBowlers(10),
           getTeamPerformance(),
-          getMatches(1, 10)
+          getMatches(1, 5)
         ]);
         setBatsmen(bats);
         setBowlers(bowl);
@@ -567,6 +578,52 @@ const DashboardPage = () => {
                         ))}
                       </tbody>
                     </table>
+                    
+                    {/* Pagination */}
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+                      <p className="text-sm text-gray-500">
+                        Showing <span className="font-medium text-gray-700">{((currentPage - 1) * 5) + 1}</span> to{' '}
+                        <span className="font-medium text-gray-700">
+                          {Math.min(currentPage * 5, matches.total)}
+                        </span> of{' '}
+                        <span className="font-medium text-gray-700">{matches.total}</span> matches
+                      </p>
+                      
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => loadMatches(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          Previous
+                        </button>
+                        
+                        {Array.from({ length: Math.min(5, Math.ceil(matches.total / 5)) }).map((_, i) => {
+                          const pageNum = i + 1;
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => loadMatches(pageNum)}
+                              className={`w-8 h-8 text-sm font-medium rounded-lg transition-colors ${
+                                currentPage === pageNum
+                                  ? 'bg-blue-600 text-white'
+                                  : 'text-gray-600 hover:bg-gray-100'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        })}
+                        
+                        <button
+                          onClick={() => loadMatches(currentPage + 1)}
+                          disabled={currentPage >= Math.ceil(matches.total / 5)}
+                          className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <p className="text-sm text-gray-500 text-center py-8">No matches found</p>
