@@ -373,7 +373,8 @@ const DashboardPage = () => {
                   <div className="space-y-5">
                     {bowlers?.slice(0, 6).map((bowler, index) => {
                       const maxWickets = bowlers[0]?.wickets || 1;
-                      const filledSegments = Math.ceil((bowler.wickets / maxWickets) * 6);
+                      const percentage = (bowler.wickets / maxWickets);
+                      const filledSegments = Math.max(1, Math.floor(percentage * 6));
                       const totalSegments = 6;
                       const colors = ['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa', '#34d399'];
                       
@@ -391,11 +392,11 @@ const DashboardPage = () => {
                             {Array.from({ length: totalSegments }).map((_, segIndex) => (
                               <div
                                 key={segIndex}
-                                className="h-2 rounded-full flex-1 transition-all duration-500"
+                                className="h-2.5 rounded-full flex-1 transition-all duration-500"
                                 style={{
                                   backgroundColor: segIndex < filledSegments 
                                     ? colors[index]
-                                    : colors[index] + '20' // 20 is hex for ~12% opacity
+                                    : colors[index] + '15' // 15 is hex for ~8% opacity (more transparent)
                                 }}
                               />
                             ))}
