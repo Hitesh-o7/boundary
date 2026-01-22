@@ -245,66 +245,43 @@ const DashboardPage = () => {
             </>
           ) : (
             <>
-              {/* KPI Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-[#0F6D4E] to-[#145C44] rounded-2xl p-6 text-white relative overflow-hidden">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5" />
-                    </div>
+              {/* KPI Cards - Healthcare Style */}
+              <div className="grid grid-cols-12 gap-6 mb-8">
+                {/* Small White Card */}
+                <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm">
+                  <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+                    <Calendar className="w-6 h-6 text-gray-600" />
                   </div>
-                  <p className="text-sm font-medium text-white/80 mb-2">Total Matches</p>
-                  <h2 className="text-5xl font-bold mb-3">{totalMatches}</h2>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Trophy className="w-4 h-4" />
-                    <span>IPL 2022 Season</span>
-                  </div>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-1">{totalMatches}</h2>
+                  <p className="text-sm text-gray-500">Total Matches</p>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
-                    </div>
+                {/* Large Orange Card */}
+                <div className="col-span-4 row-span-2 bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                    <Users className="w-7 h-7 text-white" />
                   </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Total Teams</p>
-                  <h2 className="text-5xl font-bold text-gray-900 mb-3">{teams?.length || 0}</h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Users className="w-4 h-4" />
-                    <span>Active franchises</span>
-                  </div>
+                  <h2 className="text-5xl font-bold text-white mb-2">{batsmen?.[0]?.totalRuns || 0}</h2>
+                  <p className="text-white/90 text-base font-medium">Top Runs</p>
+                  <p className="text-white/70 text-sm mt-1">{batsmen?.[0]?.playerName || 'Loading...'}</p>
+                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mb-16"></div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
-                    </div>
+                {/* Large Purple Card */}
+                <div className="col-span-5 row-span-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                    <Trophy className="w-7 h-7 text-white" />
                   </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Top Scorer</p>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
-                    {batsmen?.[0]?.playerName || 'N/A'}
-                  </h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <TrendingUp className="w-4 h-4" />
-                    <span>{batsmen?.[0]?.totalRuns || 0} runs</span>
-                  </div>
+                  <h2 className="text-5xl font-bold text-white mb-2">{bowlers?.[0]?.wickets || 0}</h2>
+                  <p className="text-white/90 text-base font-medium">Top Wickets</p>
+                  <p className="text-white/70 text-sm mt-1">{bowlers?.[0]?.playerName || 'Loading...'}</p>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
-                    </div>
-                  </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Top Bowler</p>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
-                    {bowlers?.[0]?.playerName || 'N/A'}
-                  </h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Target className="w-4 h-4" />
-                    <span>{bowlers?.[0]?.wickets || 0} wickets</span>
-                  </div>
+                {/* Stats Card */}
+                <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm">
+                  <p className="text-sm text-gray-500 mb-2">Total Teams</p>
+                  <h2 className="text-3xl font-bold text-gray-900">{teams?.length || 0}</h2>
                 </div>
               </div>
 
