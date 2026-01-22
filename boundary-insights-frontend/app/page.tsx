@@ -29,6 +29,12 @@ import {
   Cell,
   AreaChart,
   Area,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Legend,
 } from 'recharts';
 import {
   getTopBatsmen,
@@ -446,45 +452,73 @@ const DashboardPage = () => {
                     </div>
                   </div>
 
-                  {/* Team Performance Pie Chart */}
+                  {/* Team Wins Radar Chart */}
                   <div className="col-span-4 bg-white rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-base font-semibold text-gray-900 mb-6">Team Wins</h3>
+                    <div className="mb-6 flex items-center justify-between">
+                      <h3 className="text-base font-semibold text-gray-900">Team Wins</h3>
+                      <button className="p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                        </svg>
+                      </button>
+                    </div>
                     {teams && teams.length > 0 ? (
                       <>
-                        <ResponsiveContainer width="100%" height={200}>
-                          <PieChart>
-                            <Pie 
-                              data={teams.slice(0, 3).map((t, idx) => ({
-                                name: t.teamName,
-                                value: t.wins,
-                                color: idx === 0 ? '#e5e7eb' : idx === 1 ? '#a78bfa' : '#fb7185'
-                              }))} 
-                              cx="50%" 
-                              cy="50%" 
-                              innerRadius={60} 
-                              outerRadius={80} 
-                              paddingAngle={2} 
-                              dataKey="value"
-                            >
-                              {teams.slice(0, 3).map((t, index) => {
-                                const colors = ['#e5e7eb', '#a78bfa', '#fb7185'];
-                                return <Cell key={`cell-${index}`} fill={colors[index]} />;
-                              })}
-                            </Pie>
-                            <Tooltip formatter={(value) => value} />
-                          </PieChart>
+                        <ResponsiveContainer width="100%" height={300}>
+                          <RadarChart data={teams.slice(0, 8).map(team => ({
+                            team: team.teamName.length > 10 ? team.teamName.substring(0, 10) + '...' : team.teamName,
+                            Wins: team.wins,
+                            Losses: team.losses,
+                          }))}>
+                            <PolarGrid stroke="#e5e7eb" />
+                            <PolarAngleAxis 
+                              dataKey="team" 
+                              tick={{ fontSize: 10, fill: '#6b7280' }}
+                              tickLine={false}
+                            />
+                            <PolarRadiusAxis 
+                              angle={90} 
+                              domain={[0, 'dataMax']}
+                              tick={false}
+                              axisLine={false}
+                            />
+                            <Radar 
+                              name="Wins" 
+                              dataKey="Wins" 
+                              stroke="#22c55e" 
+                              fill="#86efac" 
+                              fillOpacity={0.6}
+                              strokeWidth={2}
+                              dot={{ r: 4, fill: '#22c55e' }}
+                            />
+                            <Radar 
+                              name="Losses" 
+                              dataKey="Losses" 
+                              stroke="#3b82f6" 
+                              fill="#93c5fd" 
+                              fillOpacity={0.6}
+                              strokeWidth={2}
+                              dot={{ r: 4, fill: '#3b82f6' }}
+                            />
+                            <Tooltip 
+                              contentStyle={{ 
+                                backgroundColor: '#fff', 
+                                border: 'none',
+                                borderRadius: '8px',
+                                boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                                padding: '12px'
+                              }}
+                              labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 8 }}
+                              itemStyle={{ fontSize: 11, color: '#6b7280' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ paddingTop: '16px', fontSize: '11px' }}
+                              iconType="circle"
+                              iconSize={8}
+                              align="center"
+                            />
+                          </RadarChart>
                         </ResponsiveContainer>
-                        <div className="mt-6 space-y-2">
-                          {teams.slice(0, 3).map((item, idx) => {
-                            const colors = ['#e5e7eb', '#a78bfa', '#fb7185'];
-                            return (
-                              <div key={idx} className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx] }}></div>
-                                <span className="text-xs text-gray-600">{item.teamName} ({item.wins} wins)</span>
-                              </div>
-                            );
-                          })}
-                        </div>
                       </>
                     ) : (
                       <div className="text-center text-sm text-gray-500 py-8">No team data available</div>
