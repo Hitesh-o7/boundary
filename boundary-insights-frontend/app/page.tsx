@@ -3,24 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import {
   LayoutDashboard,
-  CheckSquare,
   Calendar,
   BarChart3,
   Users,
   Settings,
-  HelpCircle,
-  LogOut,
   Search,
   Bell,
-  ArrowUpRight,
-  TrendingUp,
-  Plus,
-  Play,
-  Pause,
-  Square,
-  Download,
   Trophy,
   Target,
+  Clock,
 } from 'lucide-react';
 import {
   BarChart,
@@ -30,12 +21,9 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
-  Legend,
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
   AreaChart,
   Area,
 } from 'recharts';
@@ -87,421 +75,303 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
+    <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
+      <aside className="w-72 bg-white flex flex-col px-6 py-6 border-r border-gray-200">
         {/* Logo */}
-        <div className="p-6">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-[#0F6D4E] rounded-xl flex items-center justify-center">
-              <Trophy className="w-6 h-6 text-white" />
+        <div className="mb-8">
+          <h1 className="text-xl font-bold text-gray-900">Boundary Insights_</h1>
+        </div>
+
+        {/* Profile Card */}
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 text-center mb-8">
+          <div className="relative inline-block mb-3">
+            <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-white shadow-lg">
+              BI
             </div>
-            <span className="text-xl font-bold text-gray-900">Boundary</span>
+            <div className="absolute bottom-0 right-0 w-7 h-7 bg-white rounded-full flex items-center justify-center text-xs font-bold text-gray-900 shadow-md">
+              {teams?.length || 0}
+            </div>
+          </div>
+          <h3 className="font-bold text-gray-900 text-base mb-1">IPL Analytics</h3>
+          <p className="text-xs text-gray-500 mb-3">Season 2022</p>
+          <div className="flex items-center justify-center gap-0.5">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg key={star} className="w-3.5 h-3.5 fill-amber-400" viewBox="0 0 20 20">
+                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+              </svg>
+            ))}
           </div>
         </div>
 
         {/* Menu */}
-        <nav className="flex-1 px-4">
-          <div className="mb-6">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
-              MENU
-            </p>
+        <nav className="flex-1">
+          <div className="space-y-1">
             {[
-              { icon: LayoutDashboard, label: 'Dashboard', badge: null },
-              { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
-              { icon: Trophy, label: 'Players', badge: null },
+              { icon: LayoutDashboard, label: 'Dashboard' },
+              { icon: Users, label: 'Teams' },
+              { icon: Trophy, label: 'Players' },
+              { icon: BarChart3, label: 'Statistics' },
+              { icon: Settings, label: 'Settings' },
             ].map((item) => (
-              <a
+              <button
                 key={item.label}
-                href={item.label === 'Dashboard' ? '/' : `/${item.label.toLowerCase()}`}
                 onClick={() => setActiveMenu(item.label)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   activeMenu === item.label
-                    ? 'bg-[#0F6D4E] text-white'
+                    ? 'bg-red-50 text-red-600 border-l-4 border-red-500'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
-                <span className="flex-1 text-left font-medium">{item.label}</span>
-                {item.badge && (
-                  <span className="bg-gray-900 text-white text-xs font-bold px-2 py-0.5 rounded">
-                    {item.badge}
-                  </span>
-                )}
-              </a>
+                <span className="font-medium text-sm">{item.label}</span>
+              </button>
             ))}
           </div>
         </nav>
 
-        {/* API Status */}
-        <div className="p-4">
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="font-bold mb-1">IPL 2022 Data</h3>
-              <p className="text-sm text-gray-300 mb-4">
-                {loading ? 'Loading...' : `${totalMatches} matches analyzed`}
-              </p>
-              <a
-                href="/docs"
-                className="w-full bg-[#0F6D4E] hover:bg-[#145C44] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                API Docs
-              </a>
-            </div>
-          </div>
+        {/* Bottom Card */}
+        <div className="mt-auto bg-gray-900 rounded-2xl p-5 text-white">
+          <p className="font-bold text-sm mb-1">{totalMatches} Matches</p>
+          <p className="text-xs text-gray-400 mb-4">IPL 2022 Season</p>
+          <button className="w-full bg-white text-gray-900 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
+            View Details
+          </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
+        <header className="py-6 px-8 flex-shrink-0 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <div className="flex-1 max-w-xl">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search teams, players..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-[40px] focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
-                />
-                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
-                  ⌘ F
-                </kbd>
-              </div>
-            </div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
 
-            <div className="flex items-center gap-4 ml-8">
-              <button className="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+            <div className="flex items-center gap-3">
+              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
+                <Bell className="w-5 h-5 text-gray-600" />
               </button>
-
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                  BI
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">Boundary Insights</p>
-                  <p className="text-xs text-gray-500">IPL Analytics</p>
-                </div>
-              </div>
+              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
+                <Search className="w-5 h-5 text-gray-600" />
+              </button>
             </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <div className="flex-1 overflow-y-auto rounded-[15px] mt-2">
-          <div className="p-8 bg-[#f1f1f1]  min-h-full">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">IPL Dashboard</h1>
-            <p className="text-gray-600">
-              Analyze performance, track statistics, and explore match insights.
-            </p>
-          </div>
-
-          {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              Error: {error}
-            </div>
-          )}
-
-          {loading ? (
-            <>
-              {/* Skeleton KPI Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                    <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
-                    <div className="h-12 bg-gray-200 rounded w-16 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-20"></div>
-                  </div>
-                ))}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-8 bg-gray-50 min-h-full">
+            {error && (
+              <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                Error: {error}
               </div>
+            )}
 
-              {/* Skeleton Charts */}
-              <div className="grid grid-cols-12 gap-6 mb-8">
-                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
-                  <div className="h-64 bg-gray-100 rounded"></div>
-                </div>
-                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
-                  <div className="h-64 bg-gray-100 rounded"></div>
-                </div>
-              </div>
-
-              {/* Skeleton Team Performance */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8 animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-56 mb-6"></div>
-                <div className="h-80 bg-gray-100 rounded"></div>
-              </div>
-
-              {/* Skeleton Table */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-40 mb-6"></div>
-                <div className="space-y-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="h-16 bg-gray-100 rounded"></div>
+            {loading ? (
+              <>
+                {/* Skeleton KPI Cards */}
+                <div className="grid grid-cols-12 gap-6 mb-8">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="col-span-3 bg-white rounded-3xl p-6 border border-gray-200 animate-pulse">
+                      <div className="h-12 w-12 bg-gray-200 rounded-2xl mb-4"></div>
+                      <div className="h-12 bg-gray-200 rounded w-24 mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-32"></div>
+                    </div>
                   ))}
                 </div>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* KPI Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-[#0F6D4E] to-[#145C44] rounded-2xl p-6 text-white relative overflow-hidden">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5" />
+              </>
+            ) : (
+              <>
+                {/* Top KPI Cards */}
+                <div className="grid grid-cols-12 gap-6 mb-8">
+                  {/* Total Matches Card */}
+                  <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
+                    <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+                      <Calendar className="w-6 h-6 text-gray-600" />
                     </div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-1">{totalMatches}</h2>
+                    <p className="text-sm text-gray-500">Total Matches</p>
                   </div>
-                  <p className="text-sm font-medium text-white/80 mb-2">Total Matches</p>
-                  <h2 className="text-5xl font-bold mb-3">{totalMatches}</h2>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Trophy className="w-4 h-4" />
-                    <span>IPL 2022 Season</span>
+
+                  {/* Total Teams Card */}
+                  <div className="col-span-4 row-span-2 bg-gradient-to-br from-red-400 to-red-500 rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                      <Users className="w-7 h-7 text-white" />
+                    </div>
+                    <h2 className="text-5xl font-bold text-white mb-2">{teams?.length || 0}</h2>
+                    <p className="text-white/90 text-base font-medium">Total Teams</p>
+                    <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mb-16"></div>
+                  </div>
+
+                  {/* Top Scorer Card */}
+                  <div className="col-span-5 row-span-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                      <Trophy className="w-7 h-7 text-white" />
+                    </div>
+                    <h2 className="text-5xl font-bold text-white mb-2">{batsmen?.[0]?.totalRuns || 0}</h2>
+                    <p className="text-white/90 text-base font-medium">Top Scorer: {batsmen?.[0]?.playerName || 'N/A'}</p>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                {/* Patient Visit & Today Events */}
+                <div className="grid grid-cols-12 gap-6 mb-8">
+                  {/* Top Batsmen Chart */}
+                  <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                    <div className="mb-6">
+                      <h3 className="text-base font-semibold text-gray-900 mb-2">Top Batsmen</h3>
+                      <p className="text-3xl font-bold text-gray-900">{batsmen?.[0]?.totalRuns || 0} Runs</p>
                     </div>
+                    <ResponsiveContainer width="100%" height={200}>
+                      <BarChart data={batsmen?.slice(0, 6) || []} margin={{ top: 10, right: 10, left: -20, bottom: 10 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                        <XAxis 
+                          dataKey="playerName" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fontSize: 10, fill: '#9ca3af' }}
+                          angle={-35}
+                          textAnchor="end"
+                          height={60}
+                        />
+                        <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                        <Tooltip contentStyle={{ backgroundColor: '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }} />
+                        <Bar dataKey="totalRuns" fill="#000000" radius={[8, 8, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Total Teams</p>
-                  <h2 className="text-5xl font-bold text-gray-900 mb-3">{teams?.length || 0}</h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Users className="w-4 h-4" />
-                    <span>Active franchises</span>
-                  </div>
-                </div>
 
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                  {/* Top Bowlers */}
+                  <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base font-semibold text-gray-900">Top Bowlers</h3>
+                        <button className="text-sm text-gray-600 hover:text-gray-900">View All</button>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Top Scorer</p>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
-                    {batsmen?.[0]?.playerName || 'N/A'}
-                  </h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <TrendingUp className="w-4 h-4" />
-                    <span>{batsmen?.[0]?.totalRuns || 0} runs</span>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
-                  <div className="absolute top-4 right-4">
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
-                    </div>
-                  </div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Top Bowler</p>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
-                    {bowlers?.[0]?.playerName || 'N/A'}
-                  </h2>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Target className="w-4 h-4" />
-                    <span>{bowlers?.[0]?.wickets || 0} wickets</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Charts Grid */}
-              <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen - Area Chart */}
-                <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-900">Top Batsmen Overview</h3>
-                      <p className="text-sm text-gray-500 mt-1">Run distribution over top players</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        Top 5
-                      </button>
-                      <button className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">
-                        Top 10
-                      </button>
-                    </div>
-                  </div>
-                  <ResponsiveContainer width="100%" height={280}>
-                    <AreaChart 
-                      data={batsmen?.slice(0, 10) || []} 
-                      margin={{ top: 10, right: 20, left: 0, bottom: 50 }}
-                    >
-                      <defs>
-                        <linearGradient id="colorBatsmen" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
-                          <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.02}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid 
-                        strokeDasharray="3 3" 
-                        vertical={false} 
-                        stroke="#f0f0f0"
-                        strokeWidth={1}
-                      />
-                      <XAxis 
-                        dataKey="playerName" 
-                        axisLine={false} 
-                        tickLine={false}
-                        tick={{ fontSize: 10, fill: '#9ca3af' }}
-                        angle={-35}
-                        textAnchor="end"
-                        height={75}
-                      />
-                      <YAxis 
-                        axisLine={false} 
-                        tickLine={false}
-                        tick={{ fontSize: 11, fill: '#9ca3af' }}
-                        label={{ value: 'Runs', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: '#9ca3af' } }}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: 'none',
-                          borderRadius: '12px',
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                          padding: '12px 16px'
-                        }}
-                        labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 6 }}
-                        itemStyle={{ fontSize: 11, color: '#6b7280' }}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="totalRuns" 
-                        stroke="#60a5fa" 
-                        strokeWidth={2.5}
-                        fill="url(#colorBatsmen)"
-                        dot={{ fill: '#60a5fa', strokeWidth: 0, r: 3 }}
-                        activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Top Bowlers - Segmented Progress */}
-                <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="mb-6">
-                    <h3 className="text-base font-semibold text-gray-900">Top Bowlers</h3>
-                    <p className="text-sm text-gray-500 mt-1">Wicket leaders</p>
-                  </div>
-                  <div className="space-y-5">
-                    {bowlers?.slice(0, 6).map((bowler, index) => {
-                      // Use a reasonable fixed scale (e.g., 30 wickets = full bar)
-                      const maxWicketsScale = 30;
-                      const percentage = Math.min(1, bowler.wickets / maxWicketsScale);
-                      const filledSegments = Math.max(1, Math.round(percentage * 6));
-                      const totalSegments = 6;
-                      const colors = ['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa', '#34d399'];
-                      
-                      return (
-                        <div key={bowler.playerId}>
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {bowler.playerName}
-                            </p>
-                            <span className="text-sm font-semibold text-gray-700 ml-2">
-                              {bowler.wickets}
-                            </span>
+                    <div className="space-y-3">
+                      {bowlers?.slice(0, 6).map((bowler, index) => {
+                        const maxWickets = Math.max(...(bowlers?.map(b => b.wickets) || [0]));
+                        const percentage = maxWickets > 0 ? (bowler.wickets / maxWickets) * 100 : 0;
+                        const colors = ['bg-red-500', 'bg-purple-500', 'bg-gray-400', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'];
+                        
+                        return (
+                          <div key={bowler.playerId} className="flex items-center gap-3">
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-medium text-gray-900">{bowler.playerName}</span>
+                                <span className="text-xs font-semibold text-gray-600">{bowler.wickets} wickets</span>
+                              </div>
+                              <div className="w-full bg-gray-100 rounded-full h-2">
+                                <div 
+                                  className={`${colors[index] || 'bg-gray-400'} h-2 rounded-full transition-all`}
+                                  style={{ width: `${percentage}%` }}
+                                ></div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex gap-1">
-                            {Array.from({ length: totalSegments }).map((_, segIndex) => (
-                              <div
-                                key={segIndex}
-                                className="h-2.5 rounded-full flex-1 transition-all duration-500"
-                                style={{
-                                  backgroundColor: segIndex < filledSegments 
-                                    ? colors[index]
-                                    : colors[index] + '15' // 15 is hex for ~8% opacity (more transparent)
-                                }}
-                              />
-                            ))}
-                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recent Matches Table & Team Performance Pie Chart */}
+                <div className="grid grid-cols-12 gap-6 mb-8">
+                  {/* Recent Matches Table */}
+                  <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                    <div className="flex items-center justify-between mb-6">
+                      <h3 className="text-base font-semibold text-gray-900">Recent Matches</h3>
+                      <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-gray-200">
+                            <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Match</th>
+                            <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Venue</th>
+                            <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Date</th>
+                            <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Winner</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {matches && matches.items.length > 0 ? (
+                            matches.items.slice(0, 5).map((m) => (
+                              <tr key={m.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                <td className="py-4 px-4">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-white text-xs font-bold">
+                                      {m.homeTeam.substring(0, 2).toUpperCase()}
+                                    </div>
+                                    <span className="text-sm font-medium text-gray-900">{m.homeTeam} vs {m.awayTeam}</span>
+                                  </div>
+                                </td>
+                                <td className="py-4 px-4 text-sm text-gray-600">{m.venue || 'TBD'}</td>
+                                <td className="py-4 px-4 text-sm text-gray-600">
+                                  {new Date(m.matchDate).toLocaleDateString('en-US', { 
+                                    day: 'numeric',
+                                    month: 'short',
+                                    year: 'numeric'
+                                  })}
+                                </td>
+                                <td className="py-4 px-4 text-sm text-gray-600">{m.winnerTeam || '-'}</td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td colSpan={4} className="py-8 text-center text-sm text-gray-500">No matches found</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Team Performance Pie Chart */}
+                  <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                    <h3 className="text-base font-semibold text-gray-900 mb-6">Team Wins</h3>
+                    {teams && teams.length > 0 ? (
+                      <>
+                        <ResponsiveContainer width="100%" height={200}>
+                          <PieChart>
+                            <Pie 
+                              data={teams.slice(0, 3).map((t, idx) => ({
+                                name: t.teamName,
+                                value: t.wins,
+                                color: idx === 0 ? '#e5e7eb' : idx === 1 ? '#a78bfa' : '#fb7185'
+                              }))} 
+                              cx="50%" 
+                              cy="50%" 
+                              innerRadius={60} 
+                              outerRadius={80} 
+                              paddingAngle={2} 
+                              dataKey="value"
+                            >
+                              {teams.slice(0, 3).map((t, index) => {
+                                const colors = ['#e5e7eb', '#a78bfa', '#fb7185'];
+                                return <Cell key={`cell-${index}`} fill={colors[index]} />;
+                              })}
+                            </Pie>
+                            <Tooltip formatter={(value) => value} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="mt-6 space-y-2">
+                          {teams.slice(0, 3).map((item, idx) => {
+                            const colors = ['#e5e7eb', '#a78bfa', '#fb7185'];
+                            return (
+                              <div key={idx} className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors[idx] }}></div>
+                                <span className="text-xs text-gray-600">{item.teamName} ({item.wins} wins)</span>
+                              </div>
+                            );
+                          })}
                         </div>
-                      );
-                    })}
+                      </>
+                    ) : (
+                      <div className="text-center text-sm text-gray-500 py-8">No team data available</div>
+                    )}
                   </div>
                 </div>
-              </div>
-
-              {/* Team Performance - Area Chart */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-900">Team Performance Overview</h3>
-                    <p className="text-sm text-gray-500 mt-1">Wins and matches played over teams</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                      Wins
-                    </button>
-                    <button className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">
-                      All
-                    </button>
-                  </div>
-                </div>
-                <ResponsiveContainer width="100%" height={280}>
-                  <AreaChart 
-                    data={teams || []} 
-                    margin={{ top: 10, right: 20, left: 0, bottom: 50 }}
-                  >
-                    <defs>
-                      <linearGradient id="colorTeamWins" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
-                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.02}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid 
-                      strokeDasharray="3 3" 
-                      vertical={false} 
-                      stroke="#f0f0f0"
-                      strokeWidth={1}
-                    />
-                    <XAxis 
-                      dataKey="teamName" 
-                      axisLine={false} 
-                      tickLine={false}
-                      tick={{ fontSize: 10, fill: '#9ca3af' }}
-                      angle={-35}
-                      textAnchor="end"
-                      height={75}
-                    />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false}
-                      tick={{ fontSize: 11, fill: '#9ca3af' }}
-                    />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: 'none',
-                        borderRadius: '12px',
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                        padding: '12px 16px'
-                      }}
-                      labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 6 }}
-                      itemStyle={{ fontSize: 11, color: '#6b7280' }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="wins" 
-                      stroke="#60a5fa" 
-                      strokeWidth={2.5}
-                      fill="url(#colorTeamWins)"
-                      dot={{ fill: '#60a5fa', strokeWidth: 0, r: 3 }}
-                      activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
 
               {/* Recent Matches */}
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
