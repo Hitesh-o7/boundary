@@ -315,51 +315,76 @@ const DashboardPage = () => {
 
               {/* Charts Grid */}
               <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen - Segmented Progress */}
+                {/* Top Batsmen - Area Chart */}
                 <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="mb-6">
-                    <h3 className="text-base font-semibold text-gray-900">Top Batsmen</h3>
-                    <p className="text-sm text-gray-500 mt-1">Leading run scorers</p>
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Top Batsmen Overview</h3>
+                      <p className="text-sm text-gray-500 mt-1">Run distribution over top players</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                        Top 5
+                      </button>
+                      <button className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">
+                        Top 10
+                      </button>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-5">
-                    {batsmen?.slice(0, 8).map((batsman, index) => {
-                      // Use a reasonable fixed scale (e.g., 600 runs = full bar for IPL)
-                      const maxRunsScale = 600;
-                      const percentage = Math.min(1, batsman.totalRuns / maxRunsScale);
-                      const filledSegments = Math.max(1, Math.round(percentage * 6));
-                      const totalSegments = 6;
-                      const colors = [
-                        '#a78bfa', '#60a5fa', '#34d399', '#fbbf24',
-                        '#fb923c', '#f87171', '#ec4899', '#8b5cf6'
-                      ];
-                      
-                      return (
-                        <div key={batsman.playerId}>
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {batsman.playerName}
-                            </p>
-                            <span className="text-sm font-semibold text-gray-700 ml-2">
-                              {batsman.totalRuns}
-                            </span>
-                          </div>
-                          <div className="flex gap-1">
-                            {Array.from({ length: totalSegments }).map((_, segIndex) => (
-                              <div
-                                key={segIndex}
-                                className="h-2.5 rounded-full flex-1 transition-all duration-500"
-                                style={{
-                                  backgroundColor: segIndex < filledSegments 
-                                    ? colors[index]
-                                    : colors[index] + '15'
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <ResponsiveContainer width="100%" height={280}>
+                    <AreaChart 
+                      data={batsmen?.slice(0, 10) || []} 
+                      margin={{ top: 10, right: 20, left: 0, bottom: 50 }}
+                    >
+                      <defs>
+                        <linearGradient id="colorBatsmen" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
+                          <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.02}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid 
+                        strokeDasharray="3 3" 
+                        vertical={false} 
+                        stroke="#f0f0f0"
+                        strokeWidth={1}
+                      />
+                      <XAxis 
+                        dataKey="playerName" 
+                        axisLine={false} 
+                        tickLine={false}
+                        tick={{ fontSize: 10, fill: '#9ca3af' }}
+                        angle={-35}
+                        textAnchor="end"
+                        height={75}
+                      />
+                      <YAxis 
+                        axisLine={false} 
+                        tickLine={false}
+                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                        label={{ value: 'Runs', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: '#9ca3af' } }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#fff', 
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                          padding: '12px 16px'
+                        }}
+                        labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 6 }}
+                        itemStyle={{ fontSize: 11, color: '#6b7280' }}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="totalRuns" 
+                        stroke="#60a5fa" 
+                        strokeWidth={2.5}
+                        fill="url(#colorBatsmen)"
+                        dot={{ fill: '#60a5fa', strokeWidth: 0, r: 3 }}
+                        activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
 
                 {/* Top Bowlers - Segmented Progress */}
