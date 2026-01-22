@@ -79,14 +79,14 @@ const DashboardPage = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col px-6 py-6 border-r border-gray-200">
+      <aside className="w-72 bg-white flex flex-col px-6 py-6   ">
         {/* Logo */}
         <div className="mb-8">
           <h1 className="text-xl font-bold text-gray-900">Boundary Insights_</h1>
         </div>
 
         {/* Profile Card */}
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 text-center mb-8">
+        <div className="bg-[#f6f6f6] rounded-3xl p-6 text-center mb-8">
           <div className="relative inline-block mb-3">
             <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-white shadow-lg">
               BI
@@ -107,28 +107,29 @@ const DashboardPage = () => {
         </div>
 
         {/* Menu */}
-        <nav className="flex-1">
-          <div className="space-y-1">
+        <nav className="flex-1 ">
+          <div className="space-y-1 py-4 rounded-3xl bg-[#f6f6f6] flex flex-col justify-center ">
             {[
               { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
               { icon: Users, label: 'Teams', href: '/teams' },
               { icon: Trophy, label: 'Players', href: '/players' },
-              { icon: BarChart3, label: 'Statistics', href: '#' },
-              { icon: Settings, label: 'Settings', href: '#' },
             ].map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 transition-all relative ${
                     isActive
-                      ? 'bg-red-50 text-red-600 border-l-4 border-red-500'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      ? 'text-red-600 text-2xl'
+                      : 'text-black  hover:bg-gray-50'
                   }`}
                 >
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#fc5a42] rounded-r-full"></div>
+                  )}
                   <item.icon className="w-5 h-5" />
-                  <span className="font-medium text-sm">{item.label}</span>
+                  <span className="font-medium text-[15px]">{item.label}</span>
                 </Link>
               );
             })}
@@ -137,27 +138,27 @@ const DashboardPage = () => {
 
         {/* Bottom Card */}
         <div className="mt-auto bg-gray-900 rounded-2xl p-5 text-white">
-          <p className="font-bold text-sm mb-1">{totalMatches} Matches</p>
-          <p className="text-xs text-gray-400 mb-4">IPL 2022 Season</p>
-          <button className="w-full bg-white text-gray-900 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
+          <p className="font-bold text-[16px] mb-1">{totalMatches} Matches</p>
+          <p className="text-xs text-gray-200 mb-4">IPL 2022 Season</p>
+          <button className=" bg-white text-gray-900 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
             View Details
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden rounded-xl bg-white">
         {/* Header */}
-        <header className="py-6 px-8 flex-shrink-0 border-b border-gray-200">
+        <header className="py-8 px-8 flex-shrink-0 rounded-t-[60px] bg-[#f6f6f6]">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
 
             <div className="flex items-center gap-3">
-              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
-                <Bell className="w-5 h-5 text-gray-600" />
+              <button className="p-2.5 bg-[#e9e9eb] rounded-xl hover:bg-gray-50 transition-colors shadow-sm border">
+                <Bell className="w-5 h-5 text-black" />
               </button>
-              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
-                <Search className="w-5 h-5 text-gray-600" />
+              <button className="p-2.5 bg-[#e9e9eb] rounded-xl hover:bg-gray-50 transition-colors shadow-sm border">
+                <Search className="w-5 h-5 text-black" />
               </button>
             </div>
           </div>
@@ -165,7 +166,7 @@ const DashboardPage = () => {
 
         {/* Dashboard Content */}
         <div className="flex-1 overflow-y-auto">
-          <div className="p-8 bg-gray-50 min-h-full">
+          <div className="p-8 bg-[#f6f6f6] min-h-full">
             {error && (
               <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 Error: {error}
@@ -190,16 +191,16 @@ const DashboardPage = () => {
                 {/* Top KPI Cards */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
                   {/* Total Matches Card */}
-                  <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm border border-gray-200">
-                    <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
-                      <Calendar className="w-6 h-6 text-gray-600" />
+                  <div className="col-span-3 bg-white rounded-3xl p-6 ">
+                    <div className="w-12 h-12 bg-[#e6e8eb] rounded-2xl flex items-center justify-center mb-4">
+                      <Calendar className="w-6 h-6 text-black" />
                     </div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-1">{totalMatches}</h2>
                     <p className="text-sm text-gray-500">Total Matches</p>
                   </div>
 
                   {/* Total Teams Card */}
-                  <div className="col-span-4 row-span-2 bg-gradient-to-br from-red-400 to-red-500 rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                  <div className="col-span-4 row-span-2 bg-[#fc5a42] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Users className="w-7 h-7 text-white" />
                     </div>
@@ -209,7 +210,7 @@ const DashboardPage = () => {
                   </div>
 
                   {/* Top Scorer Card */}
-                  <div className="col-span-5 row-span-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                  <div className="col-span-5 row-span-2 bg-[#9978ee] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Trophy className="w-7 h-7 text-white" />
                     </div>

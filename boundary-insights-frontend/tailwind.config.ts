@@ -8,9 +8,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', '"Segoe UI"', 'Roboto', 'sans-serif'],
-        display: ['"SF Pro Display"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', '"Segoe UI"', 'Roboto', 'sans-serif'],
-        mono: ['"SF Mono"', 'Monaco', '"Cascadia Code"', '"Courier New"', 'monospace'],
+        sans: ['Switzer', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        display: ['Switzer', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        mono: ['Monaco', '"Cascadia Code"', '"Courier New"', 'monospace'],
       },
       colors: {
         background: "#020617",
