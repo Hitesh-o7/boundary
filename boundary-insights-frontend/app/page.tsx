@@ -232,40 +232,49 @@ const DashboardPage = () => {
           {loading ? (
             <>
               {/* Skeleton KPI Cards */}
-              <div className="grid grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-4 gap-5 mb-8">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                    <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
-                    <div className="h-12 bg-gray-200 rounded w-16 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-20"></div>
+                  <div key={i} className="bg-white rounded-xl p-5 border border-gray-200 card-shadow animate-pulse">
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg mb-4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-20 mb-3"></div>
+                    <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                    <div className="h-3 bg-gray-100 rounded w-24"></div>
                   </div>
                 ))}
               </div>
 
               {/* Skeleton Charts */}
-              <div className="grid grid-cols-12 gap-6 mb-8">
-                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
-                  <div className="h-64 bg-gray-100 rounded"></div>
+              <div className="grid grid-cols-12 gap-5 mb-8">
+                <div className="col-span-8 bg-white rounded-xl p-6 border border-gray-200 card-shadow animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-40 mb-2"></div>
+                  <div className="h-3 bg-gray-100 rounded w-32 mb-6"></div>
+                  <div className="h-80 bg-gray-50 rounded-lg"></div>
                 </div>
-                <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-48 mb-6"></div>
-                  <div className="h-64 bg-gray-100 rounded"></div>
+                <div className="col-span-4 bg-white rounded-xl p-6 border border-gray-200 card-shadow animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                  <div className="h-3 bg-gray-100 rounded w-28 mb-6"></div>
+                  <div className="space-y-3">
+                    {[1,2,3,4,5].map((i) => (
+                      <div key={i} className="h-16 bg-gray-50 rounded-lg"></div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Skeleton Team Performance */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 mb-8 animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-56 mb-6"></div>
-                <div className="h-80 bg-gray-100 rounded"></div>
+              <div className="bg-white rounded-xl p-6 border border-gray-200 card-shadow mb-8 animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-36 mb-2"></div>
+                <div className="h-3 bg-gray-100 rounded w-40 mb-6"></div>
+                <div className="h-80 bg-gray-50 rounded-lg"></div>
               </div>
 
-              {/* Skeleton Table */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
-                <div className="h-6 bg-gray-200 rounded w-40 mb-6"></div>
-                <div className="space-y-3">
+              {/* Skeleton Matches */}
+              <div className="bg-white rounded-xl p-6 border border-gray-200 card-shadow animate-pulse">
+                <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
+                <div className="h-3 bg-gray-100 rounded w-28 mb-6"></div>
+                <div className="space-y-2">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="h-16 bg-gray-100 rounded"></div>
+                    <div key={i} className="h-20 bg-gray-50 rounded-lg"></div>
                   ))}
                 </div>
               </div>
@@ -327,188 +336,208 @@ const DashboardPage = () => {
               </div>
 
               {/* Charts Grid */}
-              <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen - Gradient Bars */}
-                <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-gray-900">Top Batsmen by Runs</h3>
-                    <span className="text-sm text-gray-500">IPL 2022</span>
+              <div className="grid grid-cols-12 gap-5 mb-8">
+                {/* Top Batsmen */}
+                <div className="col-span-8 bg-white rounded-xl p-6 border border-gray-200 card-shadow">
+                  <div className="mb-5">
+                    <h3 className="text-base font-semibold text-gray-900">Leading Run Scorers</h3>
+                    <p className="text-xs text-gray-500 mt-1">Top 8 batsmen by total runs</p>
                   </div>
                   <ResponsiveContainer width="100%" height={320}>
-                    <BarChart data={batsmen?.slice(0, 8) || []} layout="vertical">
-                      <defs>
-                        <linearGradient id="batsmenGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="#0F6D4E" stopOpacity={0.8}/>
-                          <stop offset="100%" stopColor="#10b981" stopOpacity={0.9}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                      <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                    <BarChart data={batsmen?.slice(0, 8) || []} layout="vertical" margin={{ left: 10, right: 20 }}>
+                      <CartesianGrid 
+                        strokeDasharray="0" 
+                        horizontal={true} 
+                        vertical={false}
+                        stroke="#f3f4f6" 
+                      />
+                      <XAxis 
+                        type="number" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                        tickFormatter={(value) => `${value}`}
+                      />
                       <YAxis 
                         type="category" 
                         dataKey="playerName" 
                         axisLine={false} 
                         tickLine={false}
-                        width={140}
-                        tick={{ fontSize: 12 }}
+                        width={130}
+                        tick={{ fontSize: 11, fill: '#4b5563' }}
                       />
                       <Tooltip 
+                        cursor={{ fill: '#f9fafb' }}
                         contentStyle={{ 
                           backgroundColor: '#fff', 
                           border: '1px solid #e5e7eb',
                           borderRadius: '8px',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                          padding: '8px 12px'
                         }}
+                        labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 4 }}
+                        itemStyle={{ fontSize: 11, color: '#6b7280' }}
                       />
-                      <Bar dataKey="totalRuns" fill="url(#batsmenGradient)" radius={[0, 8, 8, 0]} />
+                      <Bar 
+                        dataKey="totalRuns" 
+                        fill="#10b981" 
+                        radius={[0, 6, 6, 0]}
+                        maxBarSize={32}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
-                {/* Top Bowlers - Pie Chart */}
-                <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-gray-900">Top 5 Wicket Takers</h3>
+                {/* Top Bowlers */}
+                <div className="col-span-4 bg-white rounded-xl p-6 border border-gray-200 card-shadow">
+                  <div className="mb-5">
+                    <h3 className="text-base font-semibold text-gray-900">Top Wicket Takers</h3>
+                    <p className="text-xs text-gray-500 mt-1">Leading bowlers this season</p>
                   </div>
-                  <ResponsiveContainer width="100%" height={320}>
-                    <PieChart>
-                      <Pie
-                        data={bowlers?.slice(0, 5) || []}
-                        dataKey="wickets"
-                        nameKey="playerName"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={100}
-                        label={({ playerName, wickets }) => `${wickets}`}
-                        labelLine={false}
-                      >
-                        {bowlers?.slice(0, 5).map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={['#ef4444', '#f97316', '#f59e0b', '#10b981', '#06b6d4'][index]} />
-                        ))}
-                      </Pie>
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: '1px solid #e5e7eb',
-                          borderRadius: '8px'
-                        }}
-                      />
-                      <Legend 
-                        verticalAlign="bottom" 
-                        height={36}
-                        formatter={(value) => value.length > 15 ? value.substring(0, 15) + '...' : value}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-3">
+                    {bowlers?.slice(0, 5).map((bowler, index) => (
+                      <div key={bowler.playerId} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{bowler.playerName}</p>
+                          <p className="text-xs text-gray-500">Wickets: {bowler.wickets}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               {/* Team Performance */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-gray-900">Team Performance Overview</h3>
-                  <div className="flex gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-[#0F6D4E]"></div>
-                      <span className="text-gray-600">Wins</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
-                      <span className="text-gray-600">Losses</span>
-                    </div>
-                  </div>
+              <div className="bg-white rounded-xl p-6 border border-gray-200 card-shadow mb-8">
+                <div className="mb-5">
+                  <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
+                  <p className="text-xs text-gray-500 mt-1">Win/loss breakdown for all teams</p>
                 </div>
-                <ResponsiveContainer width="100%" height={380}>
-                  <BarChart data={teams || []}>
-                    <defs>
-                      <linearGradient id="winsGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#0F6D4E" stopOpacity={0.9}/>
-                        <stop offset="100%" stopColor="#10b981" stopOpacity={0.7}/>
-                      </linearGradient>
-                      <linearGradient id="lossesGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.9}/>
-                        <stop offset="100%" stopColor="#fca5a5" stopOpacity={0.7}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <ResponsiveContainer width="100%" height={360}>
+                  <BarChart data={teams || []} margin={{ bottom: 60 }}>
+                    <CartesianGrid 
+                      strokeDasharray="0" 
+                      vertical={false} 
+                      stroke="#f3f4f6" 
+                    />
                     <XAxis 
                       dataKey="teamName" 
                       axisLine={false} 
                       tickLine={false}
-                      tick={{ fontSize: 11 }}
+                      tick={{ fontSize: 11, fill: '#6b7280' }}
                       angle={-45}
                       textAnchor="end"
-                      height={80}
+                      height={90}
                     />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12 }} />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 11, fill: '#9ca3af' }}
+                    />
                     <Tooltip 
+                      cursor={{ fill: '#f9fafb' }}
                       contentStyle={{ 
                         backgroundColor: '#fff', 
                         border: '1px solid #e5e7eb',
                         borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                        padding: '8px 12px'
                       }}
+                      labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 4 }}
+                      itemStyle={{ fontSize: 11, color: '#6b7280' }}
                     />
-                    <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                    <Bar dataKey="wins" stackId="a" fill="url(#winsGradient)" name="Wins" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="losses" stackId="a" fill="url(#lossesGradient)" name="Losses" />
-                    <Bar dataKey="ties" stackId="a" fill="#f97316" name="Ties" />
-                    <Bar dataKey="noResults" stackId="a" fill="#64748b" name="No Result" />
+                    <Legend 
+                      wrapperStyle={{ paddingTop: '16px' }}
+                      iconType="circle"
+                      iconSize={8}
+                      formatter={(value) => <span style={{ fontSize: 11, color: '#6b7280' }}>{value}</span>}
+                    />
+                    <Bar 
+                      dataKey="wins" 
+                      stackId="a" 
+                      fill="#10b981" 
+                      name="Wins" 
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={48}
+                    />
+                    <Bar 
+                      dataKey="losses" 
+                      stackId="a" 
+                      fill="#ef4444" 
+                      name="Losses"
+                      maxBarSize={48}
+                    />
+                    <Bar 
+                      dataKey="ties" 
+                      stackId="a" 
+                      fill="#f59e0b" 
+                      name="Ties"
+                      maxBarSize={48}
+                    />
+                    <Bar 
+                      dataKey="noResults" 
+                      stackId="a" 
+                      fill="#9ca3af" 
+                      name="No Result"
+                      maxBarSize={48}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
 
               {/* Recent Matches */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Recent Matches</h3>
+              <div className="bg-white rounded-xl p-6 border border-gray-200 card-shadow">
+                <div className="mb-5">
+                  <h3 className="text-base font-semibold text-gray-900">Recent Matches</h3>
+                  <p className="text-xs text-gray-500 mt-1">Latest match results</p>
+                </div>
                 {matches && matches.items.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full">
-                      <thead className="border-b border-gray-200">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                            Date
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                            Match
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                            Venue
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                            Winner
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {matches.items.map((m, idx) => (
-                          <tr key={m.id} className="border-b border-gray-100 hover:bg-gray-50">
-                            <td className="px-4 py-3 text-sm text-gray-600">
-                              {new Date(m.matchDate).toLocaleDateString()}
-                            </td>
-                            <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                              {m.homeTeam} vs {m.awayTeam}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-gray-600">
-                              {m.city ? `${m.city}, ` : ''}
-                              {m.venue}
-                            </td>
-                            <td className="px-4 py-3 text-sm">
-                              {m.winnerTeam ? (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  {m.winnerTeam}
-                                </span>
-                              ) : (
-                                <span className="text-gray-400">N/A</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="overflow-hidden">
+                    <div className="space-y-2">
+                      {matches.items.map((m) => (
+                        <div 
+                          key={m.id} 
+                          className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                          <div className="flex-shrink-0 w-20">
+                            <p className="text-xs font-medium text-gray-500">
+                              {new Date(m.matchDate).toLocaleDateString('en-US', { 
+                                month: 'short', 
+                                day: 'numeric' 
+                              })}
+                            </p>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900">
+                              {m.homeTeam} <span className="text-gray-400">vs</span> {m.awayTeam}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-0.5 truncate">
+                              {m.city && `${m.city} • `}{m.venue}
+                            </p>
+                          </div>
+                          <div className="flex-shrink-0">
+                            {m.winnerTeam ? (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                {m.winnerTeam}
+                              </span>
+                            ) : (
+                              <span className="text-xs text-gray-400">No result</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-8">No matches found</p>
+                  <div className="text-center py-12">
+                    <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
+                      <Trophy className="w-6 h-6 text-gray-400" />
+                    </div>
+                    <p className="text-sm text-gray-500">No matches found</p>
+                  </div>
                 )}
               </div>
             </>
