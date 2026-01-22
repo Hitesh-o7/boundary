@@ -7,15 +7,11 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Calendar,
-  BarChart3,
   Users,
-  Settings,
   Search,
   Bell,
   Trophy,
   TrendingUp,
-  Award,
-  Target,
 } from 'lucide-react';
 import { getTeamPerformance, TeamPerformanceDto } from '@services/api';
 import {
@@ -52,9 +48,7 @@ const TeamsPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col px-6 py-6   ">
-        {/* Logo */}
+      <aside className="w-72 bg-white flex flex-col px-6 py-6">
         <div className="mb-8 flex items-center gap-3">
           <Image
             src="/images/logo.svg"
@@ -66,7 +60,6 @@ const TeamsPage = () => {
           <h1 className="text-xl font-bold text-gray-900">Boundary</h1>
         </div>
 
-        {/* Profile Card */}
         <div className="bg-[#f6f6f6] rounded-3xl p-6 text-center mb-8">
           <div className="relative inline-block mb-3">
             <div className="w-24 h-24 mx-auto rounded-full ring-4 ring-white shadow-lg overflow-hidden">
@@ -93,8 +86,7 @@ const TeamsPage = () => {
           </div>
         </div>
 
-        {/* Menu */}
-        <nav className="flex-1 ">
+        <nav className="flex-1">
           <div className="space-y-1 py-4 rounded-3xl bg-[#f6f6f6] flex flex-col justify-center ">
             {[
               { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
@@ -123,7 +115,6 @@ const TeamsPage = () => {
           </div>
         </nav>
 
-        {/* Bottom Card */}
         <div className="mt-auto bg-[#f6f6f6] rounded-2xl p-5 text-white">
           <p className="font-bold text-[#121212] text-[16px] mb-1">{totalMatches} Matches</p>
           <p className="text-xs text-gray-400 mb-4">IPL 2022 Season</p>
@@ -133,9 +124,7 @@ const TeamsPage = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden rounded-xl bg-white">
-        {/* Header */}
         <header className="py-8 px-8 flex-shrink-0 rounded-t-[60px] bg-[#f6f6f6]">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">Teams</h1>
@@ -151,7 +140,6 @@ const TeamsPage = () => {
           </div>
         </header>
 
-        {/* Teams Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-8 bg-[#f6f6f6] min-h-full">
             {error && (
@@ -161,9 +149,7 @@ const TeamsPage = () => {
             )}
 
             {loading ? (
-              <>
-                {/* Skeleton Stats Cards */}
-                <div className="grid grid-cols-12 gap-6 mb-8">
+              <div className="grid grid-cols-12 gap-6 mb-8">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="col-span-3 bg-white rounded-3xl p-6 animate-pulse">
                       <div className="h-12 w-12 bg-gray-200 rounded-2xl mb-4"></div>
@@ -172,13 +158,10 @@ const TeamsPage = () => {
                     </div>
                   ))}
                 </div>
-              </>
             ) : (
               <>
-                {/* Stats Cards */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
-                  {/* Total Teams Card */}
-                  <div className="col-span-3 bg-white rounded-3xl p-6 ">
+                  <div className="col-span-3 bg-white rounded-3xl p-6">
                     <div className="w-12 h-12 bg-[#e6e8eb] rounded-2xl flex items-center justify-center mb-4">
                       <Users className="w-6 h-6 text-black" />
                     </div>
@@ -186,7 +169,6 @@ const TeamsPage = () => {
                     <p className="text-sm text-gray-500">Total Teams</p>
                   </div>
 
-                  {/* Top Team Card */}
                   <div className="col-span-4 row-span-2 bg-[#fc5a42] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Trophy className="w-7 h-7 text-white" />
@@ -196,7 +178,6 @@ const TeamsPage = () => {
                     <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mb-16"></div>
                   </div>
 
-                  {/* Total Matches Card */}
                   <div className="col-span-5 row-span-2 bg-[#9978ee] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Calendar className="w-7 h-7 text-white" />
@@ -207,7 +188,6 @@ const TeamsPage = () => {
                   </div>
                 </div>
 
-                {/* Team Performance Chart */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
                   <div className="mb-6">
                     <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
@@ -269,7 +249,6 @@ const TeamsPage = () => {
                   </ResponsiveContainer>
                 </div>
 
-                {/* Teams Table */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-base font-semibold text-gray-900">Detailed Statistics</h3>

@@ -6,15 +6,11 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
-  Calendar,
-  BarChart3,
   Users,
-  Settings,
   Search,
   Bell,
   Trophy,
   Target,
-  Award,
 } from 'lucide-react';
 import {
   getTopBatsmen,
@@ -64,9 +60,7 @@ const PlayersPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col px-6 py-6   ">
-        {/* Logo */}
+      <aside className="w-72 bg-white flex flex-col px-6 py-6">
         <div className="mb-8 flex items-center gap-3">
           <Image
             src="/images/logo.svg"
@@ -78,7 +72,6 @@ const PlayersPage = () => {
           <h1 className="text-xl font-bold text-gray-900">Boundary</h1>
         </div>
 
-        {/* Profile Card */}
         <div className="bg-[#f6f6f6] rounded-3xl p-6 text-center mb-8">
           <div className="relative inline-block mb-3">
             <div className="w-24 h-24 mx-auto rounded-full ring-4 ring-white shadow-lg overflow-hidden">
@@ -105,8 +98,7 @@ const PlayersPage = () => {
           </div>
         </div>
 
-        {/* Menu */}
-        <nav className="flex-1 ">
+        <nav className="flex-1">
           <div className="space-y-1 py-4 rounded-3xl bg-[#f6f6f6] flex flex-col justify-center ">
             {[
               { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
@@ -135,7 +127,6 @@ const PlayersPage = () => {
           </div>
         </nav>
 
-        {/* Bottom Card */}
         <div className="mt-auto bg-[#f6f6f6] rounded-2xl p-5 text-white">
           <p className="font-bold text-[#121212] text-[16px] mb-1">{totalPlayers} Players</p>
           <p className="text-xs text-gray-400 mb-4">IPL 2022 Season</p>
@@ -145,9 +136,7 @@ const PlayersPage = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden rounded-xl bg-white">
-        {/* Header */}
         <header className="py-8 px-8 flex-shrink-0 rounded-t-[60px] bg-[#f6f6f6]">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">Players</h1>
@@ -163,7 +152,6 @@ const PlayersPage = () => {
           </div>
         </header>
 
-        {/* Players Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-8 bg-[#f6f6f6] min-h-full">
             {error && (
@@ -173,9 +161,7 @@ const PlayersPage = () => {
             )}
 
             {loading ? (
-              <>
-                {/* Skeleton Stats Cards */}
-                <div className="grid grid-cols-12 gap-6 mb-8">
+              <div className="grid grid-cols-12 gap-6 mb-8">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="col-span-3 bg-white rounded-3xl p-6 animate-pulse">
                       <div className="h-12 w-12 bg-gray-200 rounded-2xl mb-4"></div>
@@ -184,13 +170,10 @@ const PlayersPage = () => {
                     </div>
                   ))}
                 </div>
-              </>
             ) : (
               <>
-                {/* Stats Cards */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
-                  {/* Top Scorer Card */}
-                  <div className="col-span-3 bg-white rounded-3xl p-6 ">
+                  <div className="col-span-3 bg-white rounded-3xl p-6">
                     <div className="w-12 h-12 bg-[#e6e8eb] rounded-2xl flex items-center justify-center mb-4">
                       <Trophy className="w-6 h-6 text-black" />
                     </div>
@@ -198,7 +181,6 @@ const PlayersPage = () => {
                     <p className="text-sm text-gray-500 truncate">{batsmen?.[0]?.playerName || 'N/A'}</p>
                   </div>
 
-                  {/* Top Bowler Card */}
                   <div className="col-span-4 row-span-2 bg-[#fc5a42] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Target className="w-7 h-7 text-white" />
@@ -208,7 +190,6 @@ const PlayersPage = () => {
                     <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mb-16"></div>
                   </div>
 
-                  {/* Total Players Card */}
                   <div className="col-span-5 row-span-2 bg-[#9978ee] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Users className="w-7 h-7 text-white" />
@@ -219,9 +200,7 @@ const PlayersPage = () => {
                   </div>
                 </div>
 
-                {/* Charts Grid */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
-                  {/* Top Batsmen Chart */}
                   <div className="col-span-6 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6">
                       <h3 className="text-base font-semibold text-gray-900">Top 10 Batsmen</h3>
@@ -271,7 +250,6 @@ const PlayersPage = () => {
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Top Bowlers Chart */}
                   <div className="col-span-6 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6">
                       <h3 className="text-base font-semibold text-gray-900">Top 10 Bowlers</h3>
@@ -322,9 +300,7 @@ const PlayersPage = () => {
                   </div>
                 </div>
 
-                {/* Players Tables */}
                 <div className="grid grid-cols-12 gap-6">
-                  {/* Batsmen Table */}
                   <div className="col-span-6 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-base font-semibold text-gray-900">Leading Run Scorers</h3>
@@ -352,7 +328,6 @@ const PlayersPage = () => {
                     </div>
                   </div>
 
-                  {/* Bowlers Table */}
                   <div className="col-span-6 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-base font-semibold text-gray-900">Leading Wicket Takers</h3>

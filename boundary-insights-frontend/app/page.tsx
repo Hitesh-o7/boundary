@@ -7,14 +7,10 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Calendar,
-  BarChart3,
   Users,
-  Settings,
   Search,
   Bell,
   Trophy,
-  Target,
-  Clock,
 } from 'lucide-react';
 import {
   BarChart,
@@ -24,11 +20,6 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
-  PieChart,
-  Pie,
-  Cell,
-  AreaChart,
-  Area,
   RadarChart,
   Radar,
   PolarGrid,
@@ -77,17 +68,11 @@ const DashboardPage = () => {
     })();
   }, []);
 
-  // Calculate KPIs from team data
   const totalMatches = teams?.reduce((sum, t) => sum + t.matchesPlayed, 0) || 0;
-  const totalWins = teams?.reduce((sum, t) => sum + t.wins, 0) || 0;
-  const runningProjects = teams?.filter(t => t.matchesPlayed > 0).length || 0;
-  const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col px-6 py-6   ">
-        {/* Logo */}
+      <aside className="w-72 bg-white flex flex-col px-6 py-6">
         <div className="mb-8 flex items-center gap-3">
           <Image
             src="/images/logo.svg"
@@ -99,7 +84,6 @@ const DashboardPage = () => {
           <h1 className="text-xl font-bold text-gray-900">Boundary</h1>
         </div>
 
-        {/* Profile Card */}
         <div className="bg-[#f6f6f6] rounded-3xl p-6 text-center mb-8">
           <div className="relative inline-block mb-3">
             <div className="w-24 h-24 mx-auto rounded-full ring-4 ring-white shadow-lg overflow-hidden">
@@ -126,8 +110,7 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Menu */}
-        <nav className="flex-1 ">
+        <nav className="flex-1">
           <div className="space-y-1 py-4 rounded-3xl bg-[#f6f6f6] flex flex-col justify-center ">
             {[
               { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
@@ -156,7 +139,6 @@ const DashboardPage = () => {
           </div>
         </nav>
 
-        {/* Bottom Card */}
         <div className="mt-auto bg-[#f6f6f6] rounded-2xl p-5 text-white">
           <p className="font-bold text-[#121212] text-[16px] mb-1">{totalMatches} Matches</p>
           <p className="text-xs text-gray-400 mb-4">IPL 2022 Season</p>
@@ -166,9 +148,7 @@ const DashboardPage = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden rounded-xl bg-white">
-        {/* Header */}
         <header className="py-8 px-8 flex-shrink-0 rounded-t-[60px] bg-[#f6f6f6]">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
@@ -184,7 +164,6 @@ const DashboardPage = () => {
           </div>
         </header>
 
-        {/* Dashboard Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-8 bg-[#f6f6f6] min-h-full">
             {error && (
@@ -194,9 +173,7 @@ const DashboardPage = () => {
             )}
 
             {loading ? (
-              <>
-                {/* Skeleton KPI Cards */}
-                <div className="grid grid-cols-12 gap-6 mb-8">
+              <div className="grid grid-cols-12 gap-6 mb-8">
                   {[1, 2, 3, 4].map((i) => (
                     <div key={i} className="col-span-3 bg-white rounded-3xl p-6 animate-pulse">
                       <div className="h-12 w-12 bg-gray-200 rounded-2xl mb-4"></div>
@@ -205,13 +182,10 @@ const DashboardPage = () => {
                     </div>
                   ))}
                 </div>
-              </>
             ) : (
               <>
-                {/* Top KPI Cards */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
-                  {/* Total Matches Card */}
-                  <div className="col-span-3 bg-white rounded-3xl p-6 ">
+                  <div className="col-span-3 bg-white rounded-3xl p-6">
                     <div className="w-12 h-12 bg-[#e6e8eb] rounded-2xl flex items-center justify-center mb-4">
                       <Calendar className="w-6 h-6 text-black" />
                     </div>
@@ -219,7 +193,6 @@ const DashboardPage = () => {
                     <p className="text-sm text-gray-500">Total Matches</p>
                   </div>
 
-                  {/* Total Teams Card */}
                   <div className="col-span-4 row-span-2 bg-[#fc5a42] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Users className="w-7 h-7 text-white" />
@@ -229,7 +202,6 @@ const DashboardPage = () => {
                     <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mb-16"></div>
                   </div>
 
-                  {/* Top Scorer Card */}
                   <div className="col-span-2 bg-[#9978ee] rounded-3xl p-6 shadow-lg relative overflow-hidden">
                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
                       <Trophy className="w-6 h-6 text-white" />
@@ -238,13 +210,9 @@ const DashboardPage = () => {
                     <p className="text-white/90 text-sm font-medium">Top Scorer: {batsmen?.[0]?.playerName || 'N/A'}</p>
                   </div>
 
-                  {/* Team Win Section with Timeline - Top Right */}
                   <div className="col-span-3 row-span-2 bg-white rounded-2xl p-6 shadow-sm">
                     <h3 className="text-xl font-bold text-gray-900 mb-6">Team Win Section</h3>
-                    
-                    {/* Timeline Component */}
                     <div className="relative">
-                      {/* Year Timeline Header */}
                       <div className="relative mb-4">
                         <div className="flex justify-between items-start relative px-1">
                           {[2020, 2021, 2022, 2023, 2024].map((year, index) => (
@@ -252,7 +220,6 @@ const DashboardPage = () => {
                               <div className="text-xs font-semibold text-gray-900 mb-2">
                                 {year}
                               </div>
-                              {/* Vertical dashed line extending down */}
                               <div 
                                 className="absolute top-6 w-0 h-64 border-l-2 border-dashed border-gray-300"
                                 style={{ left: '50%', transform: 'translateX(-50%)' }}
@@ -262,9 +229,7 @@ const DashboardPage = () => {
                         </div>
                       </div>
 
-                      {/* Team Wins positioned on timeline */}
                       <div className="relative mt-2" style={{ minHeight: '250px', paddingTop: '10px' }}>
-                        {/* Mock team wins data - positioned by year */}
                         {[
                           { 
                             id: 1, 
@@ -294,8 +259,7 @@ const DashboardPage = () => {
                             row: 2
                           },
                         ].map((win) => {
-                          // Calculate position based on years (2020-2024 = 0-100%)
-                          const totalYears = 4; // 2020 to 2024 = 4 year span
+                          const totalYears = 4;
                           const startPercent = ((win.startYear - 2020) / totalYears) * 100;
                           
                           return (
@@ -319,9 +283,7 @@ const DashboardPage = () => {
                   </div>
                 </div>
 
-                {/* Patient Visit & Today Events */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
-                  {/* Top Batsmen Chart */}
                   <div className="col-span-7 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6">
                       <h3 className="text-base font-semibold text-gray-900 mb-2">Top Batsmen</h3>
@@ -354,7 +316,6 @@ const DashboardPage = () => {
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Top Bowlers */}
                   <div className="col-span-5 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6">
                       <div className="flex items-center justify-between">
@@ -365,21 +326,16 @@ const DashboardPage = () => {
                     <div className="space-y-3">
                       {bowlers?.slice(0, 6).map((bowler, index) => {
                         const maxWickets = Math.max(...(bowlers?.map(b => b.wickets) || [0]));
-                        const percentage = maxWickets > 0 ? (bowler.wickets / maxWickets) * 100 : 0;
-                        
-                        // Create color variants of #fc5b42 with different opacities
                         const colorVariants = [
-                          '#fc5b42',      // Full opacity
-                          '#fc5b42e6',    // ~90% opacity
-                          '#fc5b42cc',    // ~80% opacity
-                          '#fc5b42b3',    // ~70% opacity
-                          '#fc5b4299',    // ~60% opacity
-                          '#fc5b4280',    // ~50% opacity
+                          '#fc5b42',
+                          '#fc5b42e6',
+                          '#fc5b42cc',
+                          '#fc5b42b3',
+                          '#fc5b4299',
+                          '#fc5b4280',
                         ];
                         const segmentColor = colorVariants[index] || '#fc5b42';
-                        
-                        // Create segments - each segment represents a portion
-                        const numSegments = 20; // Total segments in the bar
+                        const numSegments = 20;
                         const filledSegments = Math.round((bowler.wickets / maxWickets) * numSegments);
                         
                         return (
@@ -408,9 +364,7 @@ const DashboardPage = () => {
                   </div>
                 </div>
 
-                {/* Recent Matches Table & Team Performance Pie Chart */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
-                  {/* Recent Matches Table */}
                   <div className="col-span-8 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-base font-semibold text-gray-900">Recent Matches</h3>
@@ -459,7 +413,6 @@ const DashboardPage = () => {
                     </div>
                   </div>
 
-                  {/* Team Wins Radar Chart */}
                   <div className="col-span-4 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6 flex items-center justify-between">
                       <h3 className="text-base font-semibold text-gray-900">Team Wins</h3>
