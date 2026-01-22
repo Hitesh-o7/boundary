@@ -98,106 +98,90 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
+    <div className="flex h-screen bg-[#f5f6fa]">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
+      <aside className="w-72 bg-white flex flex-col px-6 py-6">
         {/* Logo */}
-        <div className="p-6">
+        <div className="mb-8">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-[#0F6D4E] rounded-xl flex items-center justify-center">
-              <Trophy className="w-6 h-6 text-white" />
+            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900">Boundary</span>
           </div>
         </div>
 
+        {/* Profile Card */}
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 text-center mb-8">
+          <div className="relative inline-block mb-3">
+            <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-white shadow-lg">
+              BI
+            </div>
+            <div className="absolute bottom-0 right-0 w-7 h-7 bg-white rounded-full flex items-center justify-center text-xs font-bold text-gray-900 shadow-md">
+              5.0
+            </div>
+          </div>
+          <h3 className="font-bold text-gray-900 text-base mb-1">IPL Analytics</h3>
+          <p className="text-xs text-gray-500 mb-3">Cricket Stats Platform</p>
+          <div className="flex items-center justify-center gap-0.5">
+            {[1,2,3,4,5].map((star) => (
+              <svg key={star} className="w-3.5 h-3.5 fill-yellow-400" viewBox="0 0 20 20">
+                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+              </svg>
+            ))}
+          </div>
+        </div>
+
         {/* Menu */}
-        <nav className="flex-1 px-4">
-          <div className="mb-6">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
-              MENU
-            </p>
+        <nav className="flex-1">
+          <div className="space-y-1">
             {[
-              { icon: LayoutDashboard, label: 'Dashboard', badge: null },
-              { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
-              { icon: Trophy, label: 'Players', badge: null },
+              { icon: LayoutDashboard, label: 'Dashboard' },
+              { icon: Users, label: 'Teams' },
+              { icon: Trophy, label: 'Players' },
+              { icon: BarChart3, label: 'Statistics' },
             ].map((item) => (
               <a
                 key={item.label}
                 href={item.label === 'Dashboard' ? '/' : `/${item.label.toLowerCase()}`}
                 onClick={() => setActiveMenu(item.label)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   activeMenu === item.label
-                    ? 'bg-[#0F6D4E] text-white'
+                    ? 'bg-orange-50 text-orange-600 border-l-4 border-orange-500'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
-                <span className="flex-1 text-left font-medium">{item.label}</span>
-                {item.badge && (
-                  <span className="bg-gray-900 text-white text-xs font-bold px-2 py-0.5 rounded">
-                    {item.badge}
-                  </span>
-                )}
+                <span className="font-medium text-sm">{item.label}</span>
               </a>
             ))}
           </div>
         </nav>
 
-        {/* API Status */}
-        <div className="p-4">
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="font-bold mb-1">IPL 2022 Data</h3>
-              <p className="text-sm text-gray-300 mb-4">
-                {loading ? 'Loading...' : `${totalMatches} matches analyzed`}
-              </p>
-              <a
-                href="/docs"
-                className="w-full bg-[#0F6D4E] hover:bg-[#145C44] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-              >
-                <Download className="w-4 h-4" />
-                API Docs
-              </a>
-            </div>
-          </div>
+        {/* Bottom Card */}
+        <div className="mt-auto bg-gray-900 rounded-2xl p-5 text-white">
+          <p className="font-bold text-sm mb-1">{totalMatches} Matches</p>
+          <p className="text-xs text-gray-400 mb-4">IPL 2022 Season Data</p>
+          <button className="w-full bg-white text-gray-900 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
+            View Stats
+          </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden px-8">
         {/* Header */}
-        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
+        <header className="py-6 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex-1 max-w-xl">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search teams, players..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-[40px] focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
-                />
-                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
-                  ⌘ F
-                </kbd>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 ml-8">
-              <button className="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            
+            <div className="flex items-center gap-3">
+              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
+                <Bell className="w-5 h-5 text-gray-600" />
               </button>
-
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                  BI
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">Boundary Insights</p>
-                  <p className="text-xs text-gray-500">IPL Analytics</p>
-                </div>
-              </div>
+              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
+                <Search className="w-5 h-5 text-gray-600" />
+              </button>
             </div>
           </div>
         </header>
