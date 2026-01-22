@@ -1,4 +1,4 @@
-![Uploading {4280EFFC-13CD-4620-A7B0-6B6CF4337495}.png…]()
+
 
 
 🏏 Boundary Insights – IPL Data Analytics Platform
@@ -7,6 +7,8 @@ Boundary Insights is a full-stack web application built to analyze and visualize
 The project demonstrates end-to-end implementation of database design, backend APIs, frontend analytics dashboards, and cloud deployment.
 
 This project was developed as part of an Internship Assignment to evaluate full-stack engineering fundamentals.
+
+
 
 📌 Features
 
@@ -22,12 +24,16 @@ Charts and table-based insights
 
 Cloud-deployed backend and frontend
 
+
+
 🧠 System Architecture
 Frontend (Next.js + Tailwind)
         ↓ REST API
 Backend (Node.js + Express + Prisma)
         ↓ ORM
 PostgreSQL Database
+
+
 
 📂 Dataset
 
@@ -47,6 +53,8 @@ Ball-by-ball delivery data
 Batting & bowling statistics
 
 The data was analyzed and modeled into a normalized relational schema.
+
+
 
 🗄️ Database Design
 Tables
@@ -68,6 +76,8 @@ ORM: Prisma
 Schema managed using Prisma migrations
 
 Data loaded using a custom ingestion script
+
+
 
 🔧 Backend
 Tech Stack
@@ -109,6 +119,8 @@ API Documentation
 Swagger UI available at:
 👉 <BACKEND_URL>/docs
 
+
+
 🎨 Frontend
 Tech Stack
 
@@ -142,6 +154,8 @@ Players
 
 Analytics
 
+
+
 🚀 Deployment
 Backend
 
@@ -168,6 +182,8 @@ API_BASE_URL=https://bond.hiteshthakur.space
 Frontend
 NEXT_PUBLIC_API_BASE_URL=https://bond.hiteshthakur.space
 
+
+
 🛠️ Local Setup
 Prerequisites
 
@@ -188,6 +204,8 @@ cd boundary-insights-frontend
 bun install
 bun run dev
 
+
+
 🧪 Health Check
 GET /api/health
 
@@ -206,17 +224,15 @@ Table views
 
 Swagger UI
 
-🎥 Demo Video (Optional)
 
-(Optional 2–4 minute walkthrough if included)
 
 🚧 Assumptions & Limitations
-
-Dataset limited to IPL 2022
 
 Analytics focus on aggregate insights
 
 Emphasis on clarity and correctness over heavy optimization
+
+
 
 🌱 Future Enhancements
 
@@ -229,6 +245,8 @@ Caching and performance tuning
 Authentication & role-based access
 
 Docker & CI/CD pipelines
+
+
 
 👤 Author
 
