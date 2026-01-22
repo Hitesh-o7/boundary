@@ -2,8 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* SF Fonts Configuration */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+  letter-spacing: -0.011em;
+}
+
+/* SF Pro Display for headings */
+h1, h2, h3, h4, h5, h6, 
+.font-display,
+.text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl, .text-6xl {
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+
+/* Monospace for code */
+code, pre, kbd {
+  font-family: "SF Mono", "Monaco", "Cascadia Code", "Courier New", monospace;
 }
 
 @keyframes slide-down {
