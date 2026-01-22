@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Calendar,
@@ -39,7 +41,7 @@ import {
 } from '@services/api';
 
 const DashboardPage = () => {
-  const [activeMenu, setActiveMenu] = useState('Dashboard');
+  const pathname = usePathname();
   const [batsmen, setBatsmen] = useState<TopBatsmanDto[] | null>(null);
   const [bowlers, setBowlers] = useState<TopBowlerDto[] | null>(null);
   const [teams, setTeams] = useState<TeamPerformanceDto[] | null>(null);
@@ -108,25 +110,28 @@ const DashboardPage = () => {
         <nav className="flex-1">
           <div className="space-y-1">
             {[
-              { icon: LayoutDashboard, label: 'Dashboard' },
-              { icon: Users, label: 'Teams' },
-              { icon: Trophy, label: 'Players' },
-              { icon: BarChart3, label: 'Statistics' },
-              { icon: Settings, label: 'Settings' },
-            ].map((item) => (
-              <button
-                key={item.label}
-                onClick={() => setActiveMenu(item.label)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  activeMenu === item.label
-                    ? 'bg-red-50 text-red-600 border-l-4 border-red-500'
-                    : 'text-gray-600 hover:bg-gray-50'
-                }`}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium text-sm">{item.label}</span>
-              </button>
-            ))}
+              { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
+              { icon: Users, label: 'Teams', href: '/teams' },
+              { icon: Trophy, label: 'Players', href: '/players' },
+              { icon: BarChart3, label: 'Statistics', href: '#' },
+              { icon: Settings, label: 'Settings', href: '#' },
+            ].map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                    isActive
+                      ? 'bg-red-50 text-red-600 border-l-4 border-red-500'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  <span className="font-medium text-sm">{item.label}</span>
+                </Link>
+              );
+            })}
           </div>
         </nav>
 
@@ -372,78 +377,8 @@ const DashboardPage = () => {
                     )}
                   </div>
                 </div>
-
-              {/* Recent Matches */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-base font-semibold text-gray-900">Recent Matches</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
-                    View All
-                  </button>
-                </div>
-                {matches && matches.items.length > 0 ? (
-                  <div className="overflow-hidden">
-                    <table className="min-w-full">
-                      <thead>
-                        <tr className="border-b border-gray-100">
-                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Match
-                          </th>
-                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Venue
-                          </th>
-                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Date
-                          </th>
-                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Winner
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-50">
-                        {matches.items.slice(0, 5).map((m) => (
-                          <tr key={m.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                                  {m.homeTeam.substring(0, 2).toUpperCase()}
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {m.homeTeam}
-                                  </p>
-                                  <p className="text-xs text-gray-500">vs {m.awayTeam}</p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="py-4 text-sm text-gray-600">
-                              {m.venue || 'TBD'}
-                            </td>
-                            <td className="py-4 text-sm text-gray-600">
-                              {new Date(m.matchDate).toLocaleDateString('en-US', { 
-                                day: 'numeric',
-                                month: 'short',
-                                year: 'numeric'
-                              })}
-                            </td>
-                            <td className="py-4 text-sm">
-                              {m.winnerTeam ? (
-                                <span className="font-medium text-gray-900">{m.winnerTeam}</span>
-                              ) : (
-                                <span className="text-gray-400">-</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500 text-center py-8">No matches found</p>
-                )}
-              </div>
-            </>
-          )}
+              </>
+            )}
           </div>
         </div>
       </main>
