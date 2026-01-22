@@ -56,19 +56,8 @@ const DashboardPage = () => {
   const [bowlers, setBowlers] = useState<TopBowlerDto[] | null>(null);
   const [teams, setTeams] = useState<TeamPerformanceDto[] | null>(null);
   const [matches, setMatches] = useState<PaginatedMatchesDto | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const loadMatches = async (page: number) => {
-    try {
-      const matchPage = await getMatches(page, 5);
-      setMatches(matchPage);
-      setCurrentPage(page);
-    } catch (e: any) {
-      setError(e.message ?? 'Failed to load matches');
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -77,7 +66,7 @@ const DashboardPage = () => {
           getTopBatsmen(10),
           getTopBowlers(10),
           getTeamPerformance(),
-          getMatches(1, 5)
+          getMatches(1, 10)
         ]);
         setBatsmen(bats);
         setBowlers(bowl);
@@ -98,90 +87,106 @@ const DashboardPage = () => {
   const topTeam = teams?.[0]?.teamName || 'Loading...';
 
   return (
-    <div className="flex h-screen bg-[#f5f6fa]">
+    <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
       {/* Sidebar */}
-      <aside className="w-72 bg-white flex flex-col px-6 py-6">
+      <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
         {/* Logo */}
-        <div className="mb-8">
+        <div className="p-6">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 bg-[#0F6D4E] rounded-xl flex items-center justify-center">
+              <Trophy className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900">Boundary</span>
           </div>
         </div>
 
-        {/* Profile Card */}
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-6 text-center mb-8">
-          <div className="relative inline-block mb-3">
-            <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-white shadow-lg">
-              BI
-            </div>
-            <div className="absolute bottom-0 right-0 w-7 h-7 bg-white rounded-full flex items-center justify-center text-xs font-bold text-gray-900 shadow-md">
-              5.0
-            </div>
-          </div>
-          <h3 className="font-bold text-gray-900 text-base mb-1">IPL Analytics</h3>
-          <p className="text-xs text-gray-500 mb-3">Cricket Stats Platform</p>
-          <div className="flex items-center justify-center gap-0.5">
-            {[1,2,3,4,5].map((star) => (
-              <svg key={star} className="w-3.5 h-3.5 fill-yellow-400" viewBox="0 0 20 20">
-                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-              </svg>
-            ))}
-          </div>
-        </div>
-
         {/* Menu */}
-        <nav className="flex-1">
-          <div className="space-y-1">
+        <nav className="flex-1 px-4">
+          <div className="mb-6">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 mb-3">
+              MENU
+            </p>
             {[
-              { icon: LayoutDashboard, label: 'Dashboard' },
-              { icon: Users, label: 'Teams' },
-              { icon: Trophy, label: 'Players' },
-              { icon: BarChart3, label: 'Statistics' },
+              { icon: LayoutDashboard, label: 'Dashboard', badge: null },
+              { icon: Users, label: 'Teams', badge: teams?.length.toString() || '0' },
+              { icon: Trophy, label: 'Players', badge: null },
             ].map((item) => (
               <a
                 key={item.label}
                 href={item.label === 'Dashboard' ? '/' : `/${item.label.toLowerCase()}`}
                 onClick={() => setActiveMenu(item.label)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
                   activeMenu === item.label
-                    ? 'bg-orange-50 text-orange-600 border-l-4 border-orange-500'
+                    ? 'bg-[#0F6D4E] text-white'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
                 <item.icon className="w-5 h-5" />
-                <span className="font-medium text-sm">{item.label}</span>
+                <span className="flex-1 text-left font-medium">{item.label}</span>
+                {item.badge && (
+                  <span className="bg-gray-900 text-white text-xs font-bold px-2 py-0.5 rounded">
+                    {item.badge}
+                  </span>
+                )}
               </a>
             ))}
           </div>
         </nav>
 
-        {/* Bottom Card */}
-        <div className="mt-auto bg-gray-900 rounded-2xl p-5 text-white">
-          <p className="font-bold text-sm mb-1">{totalMatches} Matches</p>
-          <p className="text-xs text-gray-400 mb-4">IPL 2022 Season Data</p>
-          <button className="w-full bg-white text-gray-900 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
-            View Stats
-          </button>
+        {/* API Status */}
+        <div className="p-4">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="font-bold mb-1">IPL 2022 Data</h3>
+              <p className="text-sm text-gray-300 mb-4">
+                {loading ? 'Loading...' : `${totalMatches} matches analyzed`}
+              </p>
+              <a
+                href="/docs"
+                className="w-full bg-[#0F6D4E] hover:bg-[#145C44] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                API Docs
+              </a>
+            </div>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden px-8">
+      <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="py-6 flex-shrink-0">
+        <header className="bg-[#f1f1f1] rounded-[15px] px-8 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            
-            <div className="flex items-center gap-3">
-              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
-                <Bell className="w-5 h-5 text-gray-600" />
+            <div className="flex-1 max-w-xl">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search teams, players..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-[40px] focus:outline-none focus:ring-2 focus:ring-[#0F6D4E] focus:border-transparent"
+                />
+                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 bg-white px-2 py-1 rounded border border-gray-200">
+                  ⌘ F
+                </kbd>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 ml-8">
+              <button className="relative p-2 text-gray-600 hover:bg-gray-50 rounded-lg">
+                <Bell className="w-6 h-6" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
               </button>
-              <button className="p-2.5 bg-white rounded-xl hover:bg-gray-50 transition-colors shadow-sm border border-gray-200">
-                <Search className="w-5 h-5 text-gray-600" />
-              </button>
+
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                  BI
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Boundary Insights</p>
+                  <p className="text-xs text-gray-500">IPL Analytics</p>
+                </div>
+              </div>
             </div>
           </div>
         </header>
@@ -245,123 +250,142 @@ const DashboardPage = () => {
             </>
           ) : (
             <>
-              {/* KPI Cards - Healthcare Style */}
+              {/* KPI Cards */}
+              <div className="grid grid-cols-4 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-[#0F6D4E] to-[#145C44] rounded-2xl p-6 text-white relative overflow-hidden">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-white/80 mb-2">Total Matches</p>
+                  <h2 className="text-5xl font-bold mb-3">{totalMatches}</h2>
+                  <div className="flex items-center gap-1 text-sm">
+                    <Trophy className="w-4 h-4" />
+                    <span>IPL 2022 Season</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Total Teams</p>
+                  <h2 className="text-5xl font-bold text-gray-900 mb-3">{teams?.length || 0}</h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <Users className="w-4 h-4" />
+                    <span>Active franchises</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Top Scorer</p>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
+                    {batsmen?.[0]?.playerName || 'N/A'}
+                  </h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <TrendingUp className="w-4 h-4" />
+                    <span>{batsmen?.[0]?.totalRuns || 0} runs</span>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-200 relative">
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-gray-600" />
+                    </div>
+                  </div>
+                  <p className="text-sm font-medium text-gray-600 mb-2">Top Bowler</p>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3 truncate">
+                    {bowlers?.[0]?.playerName || 'N/A'}
+                  </h2>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <Target className="w-4 h-4" />
+                    <span>{bowlers?.[0]?.wickets || 0} wickets</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Charts Grid */}
               <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Small White Card */}
-                <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm">
-                  <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
-                    <Calendar className="w-6 h-6 text-gray-600" />
+                {/* Top Batsmen - Area Chart */}
+                <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Top Batsmen Overview</h3>
+                      <p className="text-sm text-gray-500 mt-1">Run distribution over top players</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                        Top 5
+                      </button>
+                      <button className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">
+                        Top 10
+                      </button>
+                    </div>
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-1">{totalMatches}</h2>
-                  <p className="text-sm text-gray-500">Total Matches</p>
-                </div>
-
-                {/* Large Orange Card */}
-                <div className="col-span-4 row-span-2 bg-gradient-to-br from-orange-400 to-red-500 rounded-3xl p-6 shadow-lg relative overflow-hidden">
-                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                    <Users className="w-7 h-7 text-white" />
-                  </div>
-                  <h2 className="text-5xl font-bold text-white mb-2">{batsmen?.[0]?.totalRuns || 0}</h2>
-                  <p className="text-white/90 text-base font-medium">Top Runs</p>
-                  <p className="text-white/70 text-sm mt-1">{batsmen?.[0]?.playerName || 'Loading...'}</p>
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mb-16"></div>
-                </div>
-
-                {/* Large Purple Card */}
-                <div className="col-span-5 row-span-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl p-6 shadow-lg relative overflow-hidden">
-                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                    <Trophy className="w-7 h-7 text-white" />
-                  </div>
-                  <h2 className="text-5xl font-bold text-white mb-2">{bowlers?.[0]?.wickets || 0}</h2>
-                  <p className="text-white/90 text-base font-medium">Top Wickets</p>
-                  <p className="text-white/70 text-sm mt-1">{bowlers?.[0]?.playerName || 'Loading...'}</p>
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                </div>
-
-                {/* Stats Card */}
-                <div className="col-span-3 bg-white rounded-3xl p-6 shadow-sm">
-                  <p className="text-sm text-gray-500 mb-2">Total Teams</p>
-                  <h2 className="text-3xl font-bold text-gray-900">{teams?.length || 0}</h2>
-                </div>
-              </div>
-
-              {/* Weekly Performance - Bar Chart */}
-              <div className="bg-white rounded-3xl p-6 shadow-sm mb-8">
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
-                    <h2 className="text-2xl font-bold text-gray-900 mt-1">{totalWins}</h2>
-                  </div>
-                  <select className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg text-gray-700">
-                    <option>Today</option>
-                    <option>This Week</option>
-                    <option>This Month</option>
-                  </select>
-                </div>
-                
-                <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={teams?.slice(0, 7) || []} margin={{ top: 20, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f5f5f5" />
-                    <XAxis 
-                      dataKey="teamName" 
-                      axisLine={false} 
-                      tickLine={false}
-                      tick={{ fontSize: 11, fill: '#6b7280' }}
-                      tickFormatter={(value) => value.substring(0, 1)}
-                    />
-                    <YAxis 
-                      axisLine={false} 
-                      tickLine={false}
-                      tick={{ fontSize: 11, fill: '#9ca3af' }}
-                      domain={[0, 'dataMax + 5']}
-                    />
-                    <Tooltip 
-                      cursor={{ fill: 'transparent' }}
-                      contentStyle={{
-                        backgroundColor: '#1f2937',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '8px 12px',
-                        color: 'white'
-                      }}
-                      labelStyle={{ fontSize: 11, fontWeight: 600, marginBottom: 4 }}
-                      itemStyle={{ fontSize: 10 }}
-                    />
-                    <Bar 
-                      dataKey="wins" 
-                      radius={[8, 8, 0, 0]}
-                      maxBarSize={45}
+                  <ResponsiveContainer width="100%" height={280}>
+                    <AreaChart 
+                      data={batsmen?.slice(0, 10) || []} 
+                      margin={{ top: 10, right: 20, left: 0, bottom: 50 }}
                     >
-                      {teams?.slice(0, 7).map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={index === 3 ? '#ff6b6b' : '#1f2937'}
-                          fillOpacity={index === 3 ? 1 : 0.9}
-                          style={index === 3 ? {
-                            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.1) 4px, rgba(255,255,255,0.1) 8px)'
-                          } : {}}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-                
-                <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-gray-900 rounded"></div>
-                      <span className="text-xs text-gray-600">Regular</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-orange-500 rounded"></div>
-                      <span className="text-xs text-gray-600">Highlighted</span>
-                    </div>
-                  </div>
-                  <div className="bg-orange-50 px-3 py-1 rounded-lg">
-                    <span className="text-sm font-semibold text-orange-600">+15%</span>
-                  </div>
+                      <defs>
+                        <linearGradient id="colorBatsmen" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
+                          <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.02}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid 
+                        strokeDasharray="3 3" 
+                        vertical={false} 
+                        stroke="#f0f0f0"
+                        strokeWidth={1}
+                      />
+                      <XAxis 
+                        dataKey="playerName" 
+                        axisLine={false} 
+                        tickLine={false}
+                        tick={{ fontSize: 10, fill: '#9ca3af' }}
+                        angle={-35}
+                        textAnchor="end"
+                        height={75}
+                      />
+                      <YAxis 
+                        axisLine={false} 
+                        tickLine={false}
+                        tick={{ fontSize: 11, fill: '#9ca3af' }}
+                        label={{ value: 'Runs', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: '#9ca3af' } }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#fff', 
+                          border: 'none',
+                          borderRadius: '12px',
+                          boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                          padding: '12px 16px'
+                        }}
+                        labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 6 }}
+                        itemStyle={{ fontSize: 11, color: '#6b7280' }}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="totalRuns" 
+                        stroke="#60a5fa" 
+                        strokeWidth={2.5}
+                        fill="url(#colorBatsmen)"
+                        dot={{ fill: '#60a5fa', strokeWidth: 0, r: 3 }}
+                        activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
-              </div>
 
                 {/* Top Bowlers - Segmented Progress */}
                 <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
@@ -543,52 +567,6 @@ const DashboardPage = () => {
                         ))}
                       </tbody>
                     </table>
-                    
-                    {/* Pagination */}
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-                      <p className="text-sm text-gray-500">
-                        Showing <span className="font-medium text-gray-700">{((currentPage - 1) * 5) + 1}</span> to{' '}
-                        <span className="font-medium text-gray-700">
-                          {Math.min(currentPage * 5, matches.total)}
-                        </span> of{' '}
-                        <span className="font-medium text-gray-700">{matches.total}</span> matches
-                      </p>
-                      
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => loadMatches(currentPage - 1)}
-                          disabled={currentPage === 1}
-                          className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          Previous
-                        </button>
-                        
-                        {Array.from({ length: Math.min(5, Math.ceil(matches.total / 5)) }).map((_, i) => {
-                          const pageNum = i + 1;
-                          return (
-                            <button
-                              key={pageNum}
-                              onClick={() => loadMatches(pageNum)}
-                              className={`w-8 h-8 text-sm font-medium rounded-lg transition-colors ${
-                                currentPage === pageNum
-                                  ? 'bg-blue-600 text-white'
-                                  : 'text-gray-600 hover:bg-gray-100'
-                              }`}
-                            >
-                              {pageNum}
-                            </button>
-                          );
-                        })}
-                        
-                        <button
-                          onClick={() => loadMatches(currentPage + 1)}
-                          disabled={currentPage >= Math.ceil(matches.total / 5)}
-                          className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          Next
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 ) : (
                   <p className="text-sm text-gray-500 text-center py-8">No matches found</p>
