@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -88,8 +89,14 @@ const DashboardPage = () => {
         {/* Profile Card */}
         <div className="bg-[#f6f6f6] rounded-3xl p-6 text-center mb-8">
           <div className="relative inline-block mb-3">
-            <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-white shadow-lg">
-              BI
+            <div className="w-24 h-24 mx-auto rounded-full ring-4 ring-white shadow-lg overflow-hidden">
+              <Image
+                src="/images/me.jpeg"
+                alt="Profile"
+                width={96}
+                height={96}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="absolute bottom-0 right-0 w-7 h-7 bg-white rounded-full flex items-center justify-center text-xs font-bold text-gray-900 shadow-md">
               {teams?.length || 0}
@@ -137,10 +144,10 @@ const DashboardPage = () => {
         </nav>
 
         {/* Bottom Card */}
-        <div className="mt-auto bg-gray-900 rounded-2xl p-5 text-white">
-          <p className="font-bold text-[16px] mb-1">{totalMatches} Matches</p>
-          <p className="text-xs text-gray-200 mb-4">IPL 2022 Season</p>
-          <button className=" bg-white text-gray-900 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
+        <div className="mt-auto bg-[#f6f6f6] rounded-2xl p-5 text-white">
+          <p className="font-bold text-[#121212] text-[16px] mb-1">{totalMatches} Matches</p>
+          <p className="text-xs text-gray-400 mb-4">IPL 2022 Season</p>
+          <button className=" bg-black/50 text-gray-100 text-sm font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-100 transition-colors">
             View Details
           </button>
         </div>
@@ -154,10 +161,10 @@ const DashboardPage = () => {
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
 
             <div className="flex items-center gap-3">
-              <button className="p-2.5 bg-[#e9e9eb] rounded-xl hover:bg-gray-50 transition-colors shadow-sm border">
+              <button className="p-2.5 bg-[#e9e9eb] rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
                 <Bell className="w-5 h-5 text-black" />
               </button>
-              <button className="p-2.5 bg-[#e9e9eb] rounded-xl hover:bg-gray-50 transition-colors shadow-sm border">
+              <button className="p-2.5 bg-[#e9e9eb] rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
                 <Search className="w-5 h-5 text-black" />
               </button>
             </div>
@@ -168,7 +175,7 @@ const DashboardPage = () => {
         <div className="flex-1 overflow-y-auto">
           <div className="p-8 bg-[#f6f6f6] min-h-full">
             {error && (
-              <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <div className="mb-6 bg-red-50 text-red-700 px-4 py-3 rounded-lg">
                 Error: {error}
               </div>
             )}
@@ -178,7 +185,7 @@ const DashboardPage = () => {
                 {/* Skeleton KPI Cards */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="col-span-3 bg-white rounded-3xl p-6 border border-gray-200 animate-pulse">
+                    <div key={i} className="col-span-3 bg-white rounded-3xl p-6 animate-pulse">
                       <div className="h-12 w-12 bg-gray-200 rounded-2xl mb-4"></div>
                       <div className="h-12 bg-gray-200 rounded w-24 mb-2"></div>
                       <div className="h-4 bg-gray-200 rounded w-32"></div>
@@ -210,20 +217,99 @@ const DashboardPage = () => {
                   </div>
 
                   {/* Top Scorer Card */}
-                  <div className="col-span-5 row-span-2 bg-[#9978ee] rounded-3xl p-6 shadow-lg relative overflow-hidden">
-                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                      <Trophy className="w-7 h-7 text-white" />
+                  <div className="col-span-2 bg-[#9978ee] rounded-3xl p-6 shadow-lg relative overflow-hidden">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
+                      <Trophy className="w-6 h-6 text-white" />
                     </div>
-                    <h2 className="text-5xl font-bold text-white mb-2">{batsmen?.[0]?.totalRuns || 0}</h2>
-                    <p className="text-white/90 text-base font-medium">Top Scorer: {batsmen?.[0]?.playerName || 'N/A'}</p>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                    <h2 className="text-3xl font-bold text-white mb-2">{batsmen?.[0]?.totalRuns || 0}</h2>
+                    <p className="text-white/90 text-sm font-medium">Top Scorer: {batsmen?.[0]?.playerName || 'N/A'}</p>
+                  </div>
+
+                  {/* Team Win Section with Timeline - Top Right */}
+                  <div className="col-span-3 row-span-2 bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-6">Team Win Section</h3>
+                    
+                    {/* Timeline Component */}
+                    <div className="relative">
+                      {/* Year Timeline Header */}
+                      <div className="relative mb-4">
+                        <div className="flex justify-between items-start relative px-1">
+                          {[2020, 2021, 2022, 2023, 2024].map((year, index) => (
+                            <div key={year} className="flex flex-col items-center relative" style={{ flex: 1 }}>
+                              <div className="text-xs font-semibold text-gray-900 mb-2">
+                                {year}
+                              </div>
+                              {/* Vertical dashed line extending down */}
+                              <div 
+                                className="absolute top-6 w-0 h-64 border-l-2 border-dashed border-gray-300"
+                                style={{ left: '50%', transform: 'translateX(-50%)' }}
+                              ></div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Team Wins positioned on timeline */}
+                      <div className="relative mt-2" style={{ minHeight: '250px', paddingTop: '10px' }}>
+                        {/* Mock team wins data - positioned by year */}
+                        {[
+                          { 
+                            id: 1, 
+                            teamName: 'Mumbai Indians', 
+                            year: 2020, 
+                            color: 'bg-red-500',
+                            startYear: 2020,
+                            endYear: 2020.5,
+                            row: 0
+                          },
+                          { 
+                            id: 2, 
+                            teamName: 'Chennai Super Kings', 
+                            year: 2021, 
+                            color: 'bg-purple-500',
+                            startYear: 2021,
+                            endYear: 2022.8,
+                            row: 1
+                          },
+                          { 
+                            id: 3, 
+                            teamName: 'Gujarat Titans', 
+                            year: 2022, 
+                            color: 'bg-gray-400',
+                            startYear: 2022.5,
+                            endYear: 2024.2,
+                            row: 2
+                          },
+                        ].map((win) => {
+                          // Calculate position based on years (2020-2024 = 0-100%)
+                          const totalYears = 4; // 2020 to 2024 = 4 year span
+                          const startPercent = ((win.startYear - 2020) / totalYears) * 100;
+                          
+                          return (
+                            <div
+                              key={win.id}
+                              className={`absolute ${win.color} rounded-full px-3 py-2 flex items-center gap-2 text-white text-xs font-medium shadow-lg hover:shadow-xl transition-shadow whitespace-nowrap`}
+                              style={{
+                                left: `${startPercent}%`,
+                                top: `${win.row * 60 + 15}px`,
+                              }}
+                            >
+                              <div className="w-6 h-6 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+                                <Trophy className="w-3 h-3 text-white" />
+                              </div>
+                              <span className="font-semibold">{win.teamName}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Patient Visit & Today Events */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
                   {/* Top Batsmen Chart */}
-                  <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="col-span-7 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6">
                       <h3 className="text-base font-semibold text-gray-900 mb-2">Top Batsmen</h3>
                       <p className="text-3xl font-bold text-gray-900">{batsmen?.[0]?.totalRuns || 0} Runs</p>
@@ -241,14 +327,22 @@ const DashboardPage = () => {
                           height={60}
                         />
                         <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} />
-                        <Tooltip contentStyle={{ backgroundColor: '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }} />
-                        <Bar dataKey="totalRuns" fill="#000000" radius={[8, 8, 0, 0]} />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: '#fff', border: 'none', borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}
+                          cursor={false}
+                        />
+                        <Bar 
+                          dataKey="totalRuns" 
+                          fill="#000000" 
+                          radius={[8, 8, 0, 0]}
+                          activeBar={{ fill: '#fc5b42' }}
+                        />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
 
                   {/* Top Bowlers */}
-                  <div className="col-span-6 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="col-span-5 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="mb-6">
                       <div className="flex items-center justify-between">
                         <h3 className="text-base font-semibold text-gray-900">Top Bowlers</h3>
@@ -259,7 +353,21 @@ const DashboardPage = () => {
                       {bowlers?.slice(0, 6).map((bowler, index) => {
                         const maxWickets = Math.max(...(bowlers?.map(b => b.wickets) || [0]));
                         const percentage = maxWickets > 0 ? (bowler.wickets / maxWickets) * 100 : 0;
-                        const colors = ['bg-red-500', 'bg-purple-500', 'bg-gray-400', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500'];
+                        
+                        // Create color variants of #fc5b42 with different opacities
+                        const colorVariants = [
+                          '#fc5b42',      // Full opacity
+                          '#fc5b42e6',    // ~90% opacity
+                          '#fc5b42cc',    // ~80% opacity
+                          '#fc5b42b3',    // ~70% opacity
+                          '#fc5b4299',    // ~60% opacity
+                          '#fc5b4280',    // ~50% opacity
+                        ];
+                        const segmentColor = colorVariants[index] || '#fc5b42';
+                        
+                        // Create segments - each segment represents a portion
+                        const numSegments = 20; // Total segments in the bar
+                        const filledSegments = Math.round((bowler.wickets / maxWickets) * numSegments);
                         
                         return (
                           <div key={bowler.playerId} className="flex items-center gap-3">
@@ -268,11 +376,16 @@ const DashboardPage = () => {
                                 <span className="text-xs font-medium text-gray-900">{bowler.playerName}</span>
                                 <span className="text-xs font-semibold text-gray-600">{bowler.wickets} wickets</span>
                               </div>
-                              <div className="w-full bg-gray-100 rounded-full h-2">
-                                <div 
-                                  className={`${colors[index] || 'bg-gray-400'} h-2 rounded-full transition-all`}
-                                  style={{ width: `${percentage}%` }}
-                                ></div>
+                              <div className="w-full bg-gray-100 rounded-full h-2.5 flex gap-0.5 overflow-hidden">
+                                {Array.from({ length: numSegments }).map((_, segIndex) => (
+                                  <div
+                                    key={segIndex}
+                                    className="flex-1 h-full rounded-sm transition-all"
+                                    style={{
+                                      backgroundColor: segIndex < filledSegments ? segmentColor : 'transparent',
+                                    }}
+                                  ></div>
+                                ))}
                               </div>
                             </div>
                           </div>
@@ -285,7 +398,7 @@ const DashboardPage = () => {
                 {/* Recent Matches Table & Team Performance Pie Chart */}
                 <div className="grid grid-cols-12 gap-6 mb-8">
                   {/* Recent Matches Table */}
-                  <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="col-span-8 bg-white rounded-2xl p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-base font-semibold text-gray-900">Recent Matches</h3>
                       <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
@@ -293,7 +406,7 @@ const DashboardPage = () => {
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
-                          <tr className="border-b border-gray-200">
+                          <tr>
                             <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Match</th>
                             <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Venue</th>
                             <th className="text-left text-xs font-semibold text-gray-500 py-3 px-4">Date</th>
@@ -303,7 +416,7 @@ const DashboardPage = () => {
                         <tbody>
                           {matches && matches.items.length > 0 ? (
                             matches.items.slice(0, 5).map((m) => (
-                              <tr key={m.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                              <tr key={m.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="py-4 px-4">
                                   <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center text-white text-xs font-bold">
@@ -334,7 +447,7 @@ const DashboardPage = () => {
                   </div>
 
                   {/* Team Performance Pie Chart */}
-                  <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                  <div className="col-span-4 bg-white rounded-2xl p-6 shadow-sm">
                     <h3 className="text-base font-semibold text-gray-900 mb-6">Team Wins</h3>
                     {teams && teams.length > 0 ? (
                       <>
