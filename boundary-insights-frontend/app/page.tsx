@@ -21,6 +21,8 @@ import {
   Download,
   Trophy,
   Target,
+  Info,
+  X,
 } from 'lucide-react';
 import {
   BarChart,
@@ -56,6 +58,16 @@ const DashboardPage = () => {
   const [matches, setMatches] = useState<PaginatedMatchesDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showNotification, setShowNotification] = useState(true);
+
+  useEffect(() => {
+    // Auto-hide notification after 8 seconds
+    const timer = setTimeout(() => {
+      setShowNotification(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -70,6 +82,8 @@ const DashboardPage = () => {
         setBowlers(bowl);
         setTeams(perf);
         setMatches(matchPage);
+        // Hide notification once data loads
+        setShowNotification(false);
       } catch (e: any) {
         setError(e.message ?? 'Failed to load dashboard');
       } finally {
@@ -86,6 +100,29 @@ const DashboardPage = () => {
 
   return (
     <div className="flex h-screen bg-[#ffffff] p-4 gap-2">
+      {/* Backend Startup Notification */}
+      {showNotification && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
+          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 max-w-md">
+            <div className="flex-shrink-0">
+              <Info className="w-6 h-6" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-sm">Backend Starting Up</p>
+              <p className="text-xs text-blue-100 mt-1">
+                Data will be displayed shortly. This may take a moment on first load.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowNotification(false)}
+              className="flex-shrink-0 hover:bg-white/20 rounded-lg p-1 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Sidebar */}
       <aside className="w-64 bg-[#f1f1f1]  rounded-[15px] flex flex-col">
         {/* Logo */}
