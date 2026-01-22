@@ -1,4 +1,6 @@
 ![Uploading {4280EFFC-13CD-4620-A7B0-6B6CF4337495}.png…]()
+
+
 🏏 Boundary Insights – IPL Data Analytics Platform
 
 Boundary Insights is a full-stack web application built to analyze and visualize Indian Premier League (IPL) data.
