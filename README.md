@@ -1,4 +1,4 @@
-![Dashboard](screenshot/MainImage.png)
+![Dashboard](screenshot/image.png)
 
 
 🏏 Boundary Insights – IPL Data Analytics Platform
