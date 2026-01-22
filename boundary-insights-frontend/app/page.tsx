@@ -285,79 +285,83 @@ const DashboardPage = () => {
                 </div>
               </div>
 
-              {/* Charts Grid */}
-              <div className="grid grid-cols-12 gap-6 mb-8">
-                {/* Top Batsmen - Area Chart */}
-                <div className="col-span-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-900">Top Batsmen Overview</h3>
-                      <p className="text-sm text-gray-500 mt-1">Run distribution over top players</p>
+              {/* Weekly Performance - Bar Chart */}
+              <div className="bg-white rounded-3xl p-6 shadow-sm mb-8">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900">Team Performance</h3>
+                    <h2 className="text-2xl font-bold text-gray-900 mt-1">{totalWins}</h2>
+                  </div>
+                  <select className="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg text-gray-700">
+                    <option>Today</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                  </select>
+                </div>
+                
+                <ResponsiveContainer width="100%" height={240}>
+                  <BarChart data={teams?.slice(0, 7) || []} margin={{ top: 20, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f5f5f5" />
+                    <XAxis 
+                      dataKey="teamName" 
+                      axisLine={false} 
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: '#6b7280' }}
+                      tickFormatter={(value) => value.substring(0, 1)}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false}
+                      tick={{ fontSize: 11, fill: '#9ca3af' }}
+                      domain={[0, 'dataMax + 5']}
+                    />
+                    <Tooltip 
+                      cursor={{ fill: 'transparent' }}
+                      contentStyle={{
+                        backgroundColor: '#1f2937',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '8px 12px',
+                        color: 'white'
+                      }}
+                      labelStyle={{ fontSize: 11, fontWeight: 600, marginBottom: 4 }}
+                      itemStyle={{ fontSize: 10 }}
+                    />
+                    <Bar 
+                      dataKey="wins" 
+                      radius={[8, 8, 0, 0]}
+                      maxBarSize={45}
+                    >
+                      {teams?.slice(0, 7).map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={index === 3 ? '#ff6b6b' : '#1f2937'}
+                          fillOpacity={index === 3 ? 1 : 0.9}
+                          style={index === 3 ? {
+                            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.1) 4px, rgba(255,255,255,0.1) 8px)'
+                          } : {}}
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+                
+                <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-gray-900 rounded"></div>
+                      <span className="text-xs text-gray-600">Regular</span>
                     </div>
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                        Top 5
-                      </button>
-                      <button className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-600 rounded-lg">
-                        Top 10
-                      </button>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-orange-500 rounded"></div>
+                      <span className="text-xs text-gray-600">Highlighted</span>
                     </div>
                   </div>
-                  <ResponsiveContainer width="100%" height={280}>
-                    <AreaChart 
-                      data={batsmen?.slice(0, 10) || []} 
-                      margin={{ top: 10, right: 20, left: 0, bottom: 50 }}
-                    >
-                      <defs>
-                        <linearGradient id="colorBatsmen" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
-                          <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.02}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid 
-                        strokeDasharray="3 3" 
-                        vertical={false} 
-                        stroke="#f0f0f0"
-                        strokeWidth={1}
-                      />
-                      <XAxis 
-                        dataKey="playerName" 
-                        axisLine={false} 
-                        tickLine={false}
-                        tick={{ fontSize: 10, fill: '#9ca3af' }}
-                        angle={-35}
-                        textAnchor="end"
-                        height={75}
-                      />
-                      <YAxis 
-                        axisLine={false} 
-                        tickLine={false}
-                        tick={{ fontSize: 11, fill: '#9ca3af' }}
-                        label={{ value: 'Runs', angle: -90, position: 'insideLeft', style: { fontSize: 11, fill: '#9ca3af' } }}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: '#fff', 
-                          border: 'none',
-                          borderRadius: '12px',
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                          padding: '12px 16px'
-                        }}
-                        labelStyle={{ fontSize: 12, fontWeight: 600, color: '#111827', marginBottom: 6 }}
-                        itemStyle={{ fontSize: 11, color: '#6b7280' }}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="totalRuns" 
-                        stroke="#60a5fa" 
-                        strokeWidth={2.5}
-                        fill="url(#colorBatsmen)"
-                        dot={{ fill: '#60a5fa', strokeWidth: 0, r: 3 }}
-                        activeDot={{ r: 5, strokeWidth: 2, stroke: '#fff' }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                  <div className="bg-orange-50 px-3 py-1 rounded-lg">
+                    <span className="text-sm font-semibold text-orange-600">+15%</span>
+                  </div>
                 </div>
+              </div>
 
                 {/* Top Bowlers - Segmented Progress */}
                 <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
