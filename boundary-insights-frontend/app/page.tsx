@@ -372,9 +372,10 @@ const DashboardPage = () => {
                   </div>
                   <div className="space-y-5">
                     {bowlers?.slice(0, 6).map((bowler, index) => {
-                      const maxWickets = bowlers[0]?.wickets || 1;
-                      const percentage = (bowler.wickets / maxWickets);
-                      const filledSegments = Math.max(1, Math.floor(percentage * 6));
+                      // Use a reasonable fixed scale (e.g., 30 wickets = full bar)
+                      const maxWicketsScale = 30;
+                      const percentage = Math.min(1, bowler.wickets / maxWicketsScale);
+                      const filledSegments = Math.max(1, Math.round(percentage * 6));
                       const totalSegments = 6;
                       const colors = ['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa', '#34d399'];
                       
