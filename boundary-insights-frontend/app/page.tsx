@@ -504,47 +504,63 @@ const DashboardPage = () => {
               </div>
 
               {/* Recent Matches */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Recent Matches</h3>
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-base font-semibold text-gray-900">Recent Matches</h3>
+                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                    View All
+                  </button>
+                </div>
                 {matches && matches.items.length > 0 ? (
-                  <div className="overflow-x-auto">
+                  <div className="overflow-hidden">
                     <table className="min-w-full">
-                      <thead className="border-b border-gray-200">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
-                            Date
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                      <thead>
+                        <tr className="border-b border-gray-100">
+                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Match
                           </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Venue
                           </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">
+                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                          </th>
+                          <th className="pb-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Winner
                           </th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {matches.items.map((m, idx) => (
-                          <tr key={m.id} className="border-b border-gray-100 hover:bg-gray-50">
-                            <td className="px-4 py-3 text-sm text-gray-600">
-                              {new Date(m.matchDate).toLocaleDateString()}
+                      <tbody className="divide-y divide-gray-50">
+                        {matches.items.slice(0, 5).map((m) => (
+                          <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+                            <td className="py-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                  {m.homeTeam.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900">
+                                    {m.homeTeam}
+                                  </p>
+                                  <p className="text-xs text-gray-500">vs {m.awayTeam}</p>
+                                </div>
+                              </div>
                             </td>
-                            <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                              {m.homeTeam} vs {m.awayTeam}
+                            <td className="py-4 text-sm text-gray-600">
+                              {m.venue || 'TBD'}
                             </td>
-                            <td className="px-4 py-3 text-sm text-gray-600">
-                              {m.city ? `${m.city}, ` : ''}
-                              {m.venue}
+                            <td className="py-4 text-sm text-gray-600">
+                              {new Date(m.matchDate).toLocaleDateString('en-US', { 
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric'
+                              })}
                             </td>
-                            <td className="px-4 py-3 text-sm">
+                            <td className="py-4 text-sm">
                               {m.winnerTeam ? (
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  {m.winnerTeam}
-                                </span>
+                                <span className="font-medium text-gray-900">{m.winnerTeam}</span>
                               ) : (
-                                <span className="text-gray-400">N/A</span>
+                                <span className="text-gray-400">-</span>
                               )}
                             </td>
                           </tr>
@@ -553,7 +569,7 @@ const DashboardPage = () => {
                     </table>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-8">No matches found</p>
+                  <p className="text-sm text-gray-500 text-center py-8">No matches found</p>
                 )}
               </div>
             </>
