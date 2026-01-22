@@ -364,7 +364,7 @@ const DashboardPage = () => {
                   </ResponsiveContainer>
                 </div>
 
-                {/* Top Bowlers - Progress Bars */}
+                {/* Top Bowlers - Segmented Progress */}
                 <div className="col-span-4 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
                   <div className="mb-6">
                     <h3 className="text-base font-semibold text-gray-900">Top Bowlers</h3>
@@ -373,7 +373,8 @@ const DashboardPage = () => {
                   <div className="space-y-5">
                     {bowlers?.slice(0, 6).map((bowler, index) => {
                       const maxWickets = bowlers[0]?.wickets || 1;
-                      const percentage = (bowler.wickets / maxWickets) * 100;
+                      const filledSegments = Math.ceil((bowler.wickets / maxWickets) * 6);
+                      const totalSegments = 6;
                       const colors = ['#fbbf24', '#fb923c', '#f87171', '#a78bfa', '#60a5fa', '#34d399'];
                       
                       return (
@@ -386,14 +387,18 @@ const DashboardPage = () => {
                               {bowler.wickets}
                             </span>
                           </div>
-                          <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                            <div 
-                              className="h-full rounded-full transition-all duration-500"
-                              style={{ 
-                                width: `${percentage}%`,
-                                backgroundColor: colors[index]
-                              }}
-                            ></div>
+                          <div className="flex gap-1">
+                            {Array.from({ length: totalSegments }).map((_, segIndex) => (
+                              <div
+                                key={segIndex}
+                                className="h-2 rounded-full flex-1 transition-all duration-500"
+                                style={{
+                                  backgroundColor: segIndex < filledSegments 
+                                    ? colors[index]
+                                    : colors[index] + '20' // 20 is hex for ~12% opacity
+                                }}
+                              />
+                            ))}
                           </div>
                         </div>
                       );
