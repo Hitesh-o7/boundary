@@ -72,6 +72,17 @@ const DashboardPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {loading && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 border-4 border-[#fc5a42] border-t-transparent rounded-full animate-spin mb-4"></div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Backend is starting up...</h3>
+              <p className="text-sm text-gray-600 text-center">Please wait while we load the data</p>
+            </div>
+          </div>
+        </div>
+      )}
       <aside className="w-72 bg-white flex flex-col px-6 py-6">
         <div className="mb-8 flex items-center gap-3">
           <Image
