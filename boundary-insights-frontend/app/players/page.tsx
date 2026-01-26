@@ -38,6 +38,10 @@ const PlayersPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 10000);
+
     (async () => {
       try {
         const [bats, bowl, teamsData] = await Promise.all([
@@ -51,6 +55,7 @@ const PlayersPage = () => {
       } catch (e: any) {
         setError(e.message ?? 'Failed to load players');
       } finally {
+        clearTimeout(timeoutId);
         setLoading(false);
       }
     })();
@@ -61,12 +66,12 @@ const PlayersPage = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       {loading && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4">
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 border-4 border-[#fc5a42] border-t-transparent rounded-full animate-spin mb-4"></div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Backend is starting up...</h3>
-              <p className="text-sm text-gray-600 text-center">Please wait while we load the data</p>
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-5">
+          <div className="bg-white rounded-xl p-4 shadow-2xl border border-gray-200 flex items-center gap-3 min-w-[280px]">
+            <div className="w-8 h-8 border-2 border-[#fc5a42] border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-gray-900">Backend is starting up...</h3>
+              <p className="text-xs text-gray-600">Loading data</p>
             </div>
           </div>
         </div>
